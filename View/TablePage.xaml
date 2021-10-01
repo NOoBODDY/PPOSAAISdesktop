@@ -1,0 +1,123 @@
+﻿<Window x:Class="ClientDB.View.TablePage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientDB.View"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="TablePage" Height="450" Width="800"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        >
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="3" ShowsPreview="True" />
+        
+        
+        <Border CornerRadius="10" Grid.RowSpan="3" Grid.ColumnSpan="3">
+            <Border.Background>
+                <LinearGradientBrush StartPoint=" 0.5, 0" EndPoint="0.5, 1">
+                    <GradientStop Color="#4169E1" Offset="0.2" />
+                    <GradientStop Color="#B0E0E6" Offset="1.1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <!--WindowUpBorder-->
+        <TextBlock  Grid.ColumnSpan="3"
+                       Background="Transparent" 
+                       MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <iconPacks:PackIconMaterial 
+                                Kind="WindowMaximize"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Right" 
+                                 Margin=" 0 5 5 5"
+                                 Foreground="White"
+                                 MouseLeftButtonDown="MaxBT"/>
+            <iconPacks:PackIconMaterial 
+                                Kind="WindowMinimize"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Right" 
+                                 Margin=" 0 5 5 5"
+                                 Foreground="White"
+                                 MouseLeftButtonDown="MinBT"/>
+            <iconPacks:PackIconMaterial 
+                                 
+                                Kind="Close"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Right" 
+                                 Margin=" 0 5 5 5"
+                                 Foreground="White"
+                                 MouseLeftButtonDown="CloseBT"/>
+            
+        </StackPanel>
+        
+        
+        
+        <!--Account information-->
+        <Grid Margin="5" Grid.Column="0" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock FontSize="18" Text="{Binding Path=Authorised.Name}" />
+                <TextBlock Text="{Binding Path=Authorised.Post}"/>
+            </StackPanel>
+        </Grid>
+        
+        <!--Buttons-->
+        <StackPanel Grid.Row="2" Margin=" 5 10 5 5">
+            <TextBox x:Name="findBox" 
+                        Text="Запрос" Style="{StaticResource LightTBox}"
+                        FontFamily="./#HelveticaLight"
+                        FontSize="20"
+                        HorizontalAlignment="Center"
+                        Foreground="White"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Width="150"
+                        HorizontalContentAlignment="Left"
+                        Opacity="0.6"
+                        Height="25" />
+            <Border Width="150"
+                    Height="2"
+                    Background="White"
+                    Opacity="0.5"/>
+            <Button Content="Поиск" 
+                    Height="25" 
+                    Width="60" 
+                    Margin="0 10 0 0" 
+                    Style="{StaticResource LightButtTheme}"
+                    Command="{Binding AddCommand}"/>
+        </StackPanel>
+        
+        <!--Table-->
+        <DataGrid Grid.Row="1" 
+                  Grid.Column="2" 
+                  Grid.RowSpan="2" 
+                  Style="{StaticResource DataGridStyle}"
+                  AutoGenerateColumns="True"
+                  ItemsSource="{Binding Students}"
+                  />
+    </Grid>
+</Window>
