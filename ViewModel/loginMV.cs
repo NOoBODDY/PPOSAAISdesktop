@@ -3,6 +3,9 @@ using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using ClientDB.Model;
 using System.Windows;
+using Unity;
+using ClientDB.View;
+
 
 namespace ClientDB.ViewModel
 {
@@ -16,7 +19,6 @@ namespace ClientDB.ViewModel
         }
 
         string username;
-        string password;
         public string UserName 
         {
             get { return username; }
@@ -26,21 +28,25 @@ namespace ClientDB.ViewModel
                 OnPropertyChanged("UserName");
             }
         }
+
+        private IUnityContainer container;
+
+        public loginMV( IUnityContainer unityContainer)
+        {
+            UserName = "UserName";
+            container = unityContainer;
+            
+        }
+
         public string Password
         {
-            get { return password; }
-            set
+            get
             {
-                password = value;
-                OnPropertyChanged("Password");
+                IPasswordSupplier passwordSupplier = container.Resolve<IPasswordSupplier>();
+                return passwordSupplier.GetPassword();
             }
         }
 
-        public loginMV()
-        {
-            UserName = "UserName";
-            Password = Password;
-        }
 
         private RelayCommand loginCommand;
         public RelayCommand LoginCommand

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ClientDB"
+        xmlns:local="clr-namespace:ClientDB.View"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="400"
@@ -13,8 +13,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         >
-    <Grid>
-        <Grid>
+    <Grid x:Name="mainGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
@@ -60,9 +59,10 @@
                            HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <StackPanel Grid.Row="2">
+            
+            <!--<StackPanel Grid.Row="2">
 
-                <!--Username box-->
+                --><!--Username box--><!--
                 <StackPanel  Orientation="Horizontal">
                     <TextBox Style="{StaticResource LightTBox}" FontFamily="./#HelveticaLight"
                          FontWeight="Light"
@@ -90,11 +90,11 @@
                     Background="White"
                     Opacity="0.5"/>
 
-                <!--Password box-->
+                --><!--Password box--><!--
                 <StackPanel  Orientation="Horizontal" Margin="0 20 0 0">
                     <PasswordBox Style="{StaticResource LightPBox}" FontFamily="./#HelveticaLight"
+                         
                          FontWeight="Light"
-                         Password="{Binding Password}"
                          FontSize="20"
                          HorizontalAlignment="Center"
                          Foreground="White"
@@ -116,7 +116,7 @@
                     Height="2"
                     Background="White"
                     Opacity="0.5"/>
-                <!--<TextBox Template="{StaticResource tblockTemplate}" Text="Hello" HorizontalAlignment="Center" FontSize="20" Opacity="0.7" Width=" 250"/>-->
+                --><!--<TextBox Template="{StaticResource tblockTemplate}" Text="Hello" HorizontalAlignment="Center" FontSize="20" Opacity="0.7" Width=" 250"/>--><!--
 
                 <Button Style="{DynamicResource LightButtTheme}" 
                         Margin="0 50 0 0" 
@@ -125,10 +125,10 @@
                         Content="ВХОД"
                         Click="OpenTable"/>
 
-            </StackPanel>
+            </StackPanel>-->
 
 
 
         </Grid>
-    </Grid>
+
 </Window>

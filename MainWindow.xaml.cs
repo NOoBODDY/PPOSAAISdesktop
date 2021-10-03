@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientDB.View;
 using ClientDB.ViewModel;
+using Unity;
 
 
 namespace ClientDB
@@ -26,7 +27,14 @@ namespace ClientDB
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new loginMV();
+            IUnityContainer container = new UnityContainer();
+            LoginControl loginControl = new LoginControl();
+            container.RegisterInstance<IPasswordSupplier>(loginControl);
+            loginMV MVlogin = new loginMV(container);
+            loginControl.DataContext = MVlogin;
+            DataContext = MVlogin;
+            Grid.SetRow(loginControl, 2);
+            mainGrid.Children.Add(loginControl);
         }
         private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

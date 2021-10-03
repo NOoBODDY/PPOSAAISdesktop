@@ -55,7 +55,7 @@
                 <ControlTemplate TargetType="PasswordBox">
                     <Border Background="Transparent">
                         <Grid>
-                            <TextBox VerticalAlignment="Stretch"
+                            <PasswordBox VerticalAlignment="Stretch"
                                      VerticalContentAlignment="Center"
                                      HorizontalAlignment="Stretch"
                                      x:Name="passwordBox"
@@ -65,7 +65,7 @@
                                      FontSize="{TemplateBinding FontSize}"
                                      FontFamily="{TemplateBinding FontFamily}"
                                      CaretBrush="White"
-                                     Text="{Binding Mode = OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     
                                 />
                             <TextBlock IsHitTestVisible="False"
                                        Text="Password"

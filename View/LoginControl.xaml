@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="ClientDB.View.LoginControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientDB.View"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="400">
+    <Grid>
+
+        <StackPanel>
+
+            <!--Username box-->
+            <StackPanel  Orientation="Horizontal">
+                <TextBox Style="{StaticResource LightTBox}" FontFamily="./#HelveticaLight"
+                         FontWeight="Light"
+                         Text="{Binding UserName, Mode=TwoWay}"
+                         FontSize="20"
+                         HorizontalAlignment="Center"
+                         Foreground="White"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Width="230"
+                         HorizontalContentAlignment="Left"
+                         Opacity="0.6"
+                         Height="25"
+                         Margin="75 0 0 0"
+                         
+                    />
+                <iconPacks:PackIconMaterial Kind="Account"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Center" 
+                                            Foreground="White"/>
+            </StackPanel>
+
+            <Border Width="250"
+                    Height="2"
+                    Background="White"
+                    Opacity="0.5"/>
+
+            <!--Password box-->
+            <StackPanel  Orientation="Horizontal" Margin="0 20 0 0">
+                <PasswordBox 
+                         x:Name="pwdBox"
+                         Style="{StaticResource LightPBox}" 
+                         Password="password"
+                         FontFamily="./#HelveticaLight"
+                         FontWeight="Light"
+                         FontSize="20"
+                         HorizontalAlignment="Center"
+                         Foreground="White"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Width="230"
+                         HorizontalContentAlignment="Left"
+                         Opacity="0.6"
+                         Height="25"
+                         Margin="75 0 0 0"
+                    />
+                <iconPacks:PackIconMaterial Kind="FormTextboxPassword"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Center" 
+                                            Foreground="White"/>
+            </StackPanel>
+
+            <Border Width="250"
+                    Height="2"
+                    Background="White"
+                    Opacity="0.5"/>
+            <!--<TextBox Template="{StaticResource tblockTemplate}" Text="Hello" HorizontalAlignment="Center" FontSize="20" Opacity="0.7" Width=" 250"/>-->
+
+            <Button Style="{DynamicResource LightButtTheme}" 
+                        Margin="0 50 0 0" 
+                        Width="100" 
+                        Height="40" 
+                        Content="ВХОД"
+                        Command="{Binding LoginCommand}"/>
+
+        </StackPanel>
+    </Grid>
+</UserControl>
