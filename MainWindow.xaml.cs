@@ -57,6 +57,5 @@ namespace ClientDB
             tablePage.Show();
         }
 
-
     }
 }

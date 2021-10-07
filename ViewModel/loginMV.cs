@@ -47,6 +47,15 @@ namespace ClientDB.ViewModel
             }
         }
 
+        public int PassLength
+        {
+            get
+            {
+                IPasswordSupplier passwordSupplier = container.Resolve<IPasswordSupplier>();
+                return passwordSupplier.PasswordLength();
+            }
+        }
+
 
         private RelayCommand loginCommand;
         public RelayCommand LoginCommand

@@ -19,10 +19,10 @@
                                      FontSize="{TemplateBinding FontSize}"
                                      FontFamily="{TemplateBinding FontFamily}"
                                      CaretBrush="White"
-                                     Text="{ Binding Mode = OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{ Binding Path=Text, Mode = OneWay, UpdateSourceTrigger=PropertyChanged}"
                                 />
                             <TextBlock IsHitTestVisible="False"
-                                       Text="{TemplateBinding Text}"
+                                       Text="Username"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
                                        Foreground="{TemplateBinding Foreground}"
@@ -46,63 +46,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
-    <Style x:Key="LightPBox" TargetType="PasswordBox" >
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="PasswordBox">
-                    <Border Background="Transparent">
-                        <Grid>
-                            <PasswordBox VerticalAlignment="Stretch"
-                                     VerticalContentAlignment="Center"
-                                     HorizontalAlignment="Stretch"
-                                     x:Name="passwordBox"
-                                     Background="Transparent"
-                                     BorderThickness="0"
-                                     Foreground="{TemplateBinding Foreground}"
-                                     FontSize="{TemplateBinding FontSize}"
-                                     FontFamily="{TemplateBinding FontFamily}"
-                                     CaretBrush="White"
-                                     
-                                />
-                            <TextBlock IsHitTestVisible="False"
-                                       Text="Password"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Left"
-                                       Foreground="{TemplateBinding Foreground}"
-                                       FontSize="{TemplateBinding FontSize}"
-                                       FontFamily="{TemplateBinding FontFamily}"
-                                       >
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName = passwordBox, Path= Password}" Value="">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+
 </ResourceDictionary>
-<!--FontFamily="./#HelveticaLight"
-                         FontWeight="Light"
-                         Text="UserName"
-                         FontSize="20"
-                         HorizontalAlignment="Center"
-                         Foreground="White"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         Width="230"
-                         HorizontalContentAlignment="Left"
-                         Opacity="0.6"
-                         Height="25"
-                         Margin="75 0 0 0"-->

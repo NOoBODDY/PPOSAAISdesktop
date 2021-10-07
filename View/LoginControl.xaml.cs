@@ -17,7 +17,9 @@ namespace ClientDB.View
 {
     public interface IPasswordSupplier
     {
+        
         string GetPassword();
+        int PasswordLength();
     }
     /// <summary>
     /// Логика взаимодействия для LoginControl.xaml
@@ -33,6 +35,11 @@ namespace ClientDB.View
         public string GetPassword()
         {
             return pwdBox.Password;
+        }
+
+        public int PasswordLength()
+        {
+            return pwdBox.Password.Length;
         }
     }
 }
