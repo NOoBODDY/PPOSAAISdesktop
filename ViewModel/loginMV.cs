@@ -5,6 +5,14 @@ using ClientDB.Model;
 using System.Windows;
 using Unity;
 using ClientDB.View;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using System.IdentityModel.Tokens.Jwt;
+
+//TODO 
+//(1)добавить проверку на админа, когда будет функционал
+
 
 
 namespace ClientDB.ViewModel
@@ -19,6 +27,11 @@ namespace ClientDB.ViewModel
         }
 
         string username;
+        string URL;
+        Window window;
+        static string loginUrl = "/api/login";
+
+
         public string UserName 
         {
             get { return username; }
@@ -31,11 +44,12 @@ namespace ClientDB.ViewModel
 
         private IUnityContainer container;
 
-        public loginMV( IUnityContainer unityContainer)
+        public loginMV( IUnityContainer unityContainer, string url , Window view)
         {
             UserName = "UserName";
             container = unityContainer;
-            
+            URL = url;
+            window = view;
         }
 
         public string Password
@@ -65,7 +79,48 @@ namespace ClientDB.ViewModel
                 return loginCommand ??
                     (loginCommand = new RelayCommand(obj =>
                     {
-                        MessageBox.Show(UserName + " " + Password);
+                        MessageBox.Show(UserName + " " + Password); //удалить
+                        WebRequest webRequest = WebRequest.Create(URL + loginUrl);
+                        webRequest.Method = "POST";
+                        byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("username=" + UserName + "&" + "password=" + Password);
+                        webRequest.ContentType = "application/x-www-form-urlencoded";
+                        webRequest.ContentLength = byteArray.Length;
+                        //записываем данные в поток запроса
+                        using (Stream dataStream = webRequest.GetRequestStream())
+                        {
+                            dataStream.Write(byteArray, 0, byteArray.Length);
+                        }
+                        WebResponse webResponse = webRequest.GetResponse();
+
+                        string response;
+                        using (Stream stream = webResponse.GetResponseStream())
+                        {
+                            using (StreamReader reader = new StreamReader(stream))
+                            {
+                                response = reader.ReadToEnd();
+                            }
+                        }
+                        webResponse.Close();
+
+                        JObject responceObj = JObject.Parse(response);
+
+                        if ((string)responceObj["status"] == "success")
+                        {
+                            //var handler = new JwtSecurityTokenHandler();
+                            //var jsonToken = handler.ReadToken( (string) responceObj["token"]);
+                            //var tokenS = jsonToken as JwtSecurityToken;
+
+                            //TODO (1)
+
+                            TablePage page = new TablePage(UserName,(string) responceObj["token"], null);
+                            page.Show();
+                            window.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Иди нахуй");
+                        }
+
                     }));
             }
         }

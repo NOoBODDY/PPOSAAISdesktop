@@ -24,13 +24,14 @@ namespace ClientDB
     /// </summary>
     public partial class MainWindow : Window
     {
+        static string url = "http://80.87.192.94:8080";
         public MainWindow()
         {
             InitializeComponent();
             IUnityContainer container = new UnityContainer();
             LoginControl loginControl = new LoginControl();
             container.RegisterInstance<IPasswordSupplier>(loginControl);
-            loginMV MVlogin = new loginMV(container);
+            loginMV MVlogin = new loginMV(container, url, this);
             loginControl.DataContext = MVlogin;
             DataContext = MVlogin;
             Grid.SetRow(loginControl, 2);
@@ -45,17 +46,7 @@ namespace ClientDB
         {
             this.Close();
         }
-        private void OpenTable(object sender, RoutedEventArgs e)
-        {
-            TablePage tablePage = new TablePage();
-            tablePage.Show();
-        }
-
-        private void Login(object sender, RoutedEventArgs e)
-        {
-            TablePage tablePage = new TablePage();
-            tablePage.Show();
-        }
+        
 
     }
 }

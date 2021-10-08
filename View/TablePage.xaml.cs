@@ -21,11 +21,13 @@ namespace ClientDB.View
     /// </summary>
     public partial class TablePage : Window
     {
-        public TablePage()
+        public TablePage(string username, string jwt, string post)
         {
             InitializeComponent();
-            
-            DataContext = new MainViewModel();
+
+            MainViewModel VM = new MainViewModel();
+            VM.Authorised = new Model.Account {  Name = username, JWT = jwt , Post = post};
+            DataContext = VM;
             
         }
         private void CloseBT(object sender, MouseButtonEventArgs e)
@@ -38,7 +40,6 @@ namespace ClientDB.View
         }
         private void MaxBT(object sender, MouseButtonEventArgs e)
         {
-            findBox.Text = "";
             this.WindowState = WindowState.Maximized;
         }
         private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
