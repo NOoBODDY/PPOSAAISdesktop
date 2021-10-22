@@ -21,15 +21,38 @@ namespace ClientDB.View
     /// </summary>
     public partial class TablePage : Window
     {
-        public TablePage(string username, string jwt, string post)
+        bool fullScreen = false;
+        public TablePage(string username, string jwt, string post, string url)
         {
             InitializeComponent();
 
-            MainViewModel VM = new MainViewModel();
+            MainViewModel VM = new MainViewModel(url);
             VM.Authorised = new Model.Account {  Name = username, JWT = jwt , Post = post};
+            VM.CloseAction = this.Close;
+            VM.MinimizeAction = Minimize;
+            VM.MaximizeAction = MaxNormal;
             DataContext = VM;
             
         }
+
+        void Minimize ()
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+        void MaxNormal()
+        {
+            if (!fullScreen)
+            {
+                this.WindowState = WindowState.Maximized;
+                fullScreen = true;
+            }
+            else
+            {
+                this.WindowState = WindowState.Normal;
+                fullScreen = false;
+            }
+        }
+
         private void CloseBT(object sender, MouseButtonEventArgs e)
         {
             this.Close();

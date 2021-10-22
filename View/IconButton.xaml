@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="ClientDB.View.IconButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientDB.View"
+              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100"
+             x:Name="this">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Ellipse
+                             Width="{TemplateBinding Width}" 
+                             Height="{TemplateBinding Height}" 
+                             StrokeThickness="2" 
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Right"
+                             Margin="0 0 0 0">
+                            <Ellipse.Stroke>
+                                <SolidColorBrush Color="{Binding BorderColor, RelativeSource={RelativeSource FindAncestor, AncestorType= {x:Type Color}}}"/>
+                            </Ellipse.Stroke>
+                            <Ellipse.Fill>
+                                <SolidColorBrush Color="Transparent"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <iconPacks:PackIconMaterial x:Name="icon"
+                                    Kind="{Binding Kind}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center" 
+                                    Margin="0 0 0 0"
+                                    Foreground="White"
+                                    Background="Transparent"
+                                    />
+        <Button x:Name="btn"
+                Width="{Binding Width}"
+                Height="{Binding Height}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Command="{Binding ElementName=this,  Path=Command}"
+                CommandParameter="{Binding}"
+            />
+        
+    </Grid>
+</UserControl>

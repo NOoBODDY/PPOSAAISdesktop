@@ -25,7 +25,7 @@
                          Opacity="0.6"
                          Height="25"
                          Margin="75 0 0 0"
-                         Text="{Binding Path = UserName}"
+                         Text="UserName"
                     />
                 <iconPacks:PackIconMaterial Kind="Account"
                                  VerticalAlignment="Center"

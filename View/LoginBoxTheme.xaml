@@ -19,10 +19,10 @@
                                      FontSize="{TemplateBinding FontSize}"
                                      FontFamily="{TemplateBinding FontFamily}"
                                      CaretBrush="White"
-                                     Text="{ Binding Path=Text, Mode = OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{ Binding Path=UserName , Mode= TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 />
                             <TextBlock IsHitTestVisible="False"
-                                       Text="Username"
+                                       Text="{TemplateBinding Text}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
                                        Foreground="{TemplateBinding Foreground}"

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections.ObjectModel;
+using System;
 using ClientDB.Model;
 using System.Windows;
 using Unity;
@@ -28,8 +28,9 @@ namespace ClientDB.ViewModel
 
         string username;
         string URL;
-        Window window;
         static string loginUrl = "/api/login";
+
+        public Action CloseAction { get; set; }
 
 
         public string UserName 
@@ -44,12 +45,10 @@ namespace ClientDB.ViewModel
 
         private IUnityContainer container;
 
-        public loginMV( IUnityContainer unityContainer, string url , Window view)
+        public loginMV( IUnityContainer unityContainer, string url)
         {
-            UserName = "UserName";
             container = unityContainer;
             URL = url;
-            window = view;
         }
 
         public string Password
@@ -61,14 +60,6 @@ namespace ClientDB.ViewModel
             }
         }
 
-        public int PassLength
-        {
-            get
-            {
-                IPasswordSupplier passwordSupplier = container.Resolve<IPasswordSupplier>();
-                return passwordSupplier.PasswordLength();
-            }
-        }
 
 
         private RelayCommand loginCommand;
@@ -79,7 +70,6 @@ namespace ClientDB.ViewModel
                 return loginCommand ??
                     (loginCommand = new RelayCommand(obj =>
                     {
-                        MessageBox.Show(UserName + " " + Password); //удалить
                         WebRequest webRequest = WebRequest.Create(URL + loginUrl);
                         webRequest.Method = "POST";
                         byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("username=" + UserName + "&" + "password=" + Password);
@@ -112,9 +102,9 @@ namespace ClientDB.ViewModel
 
                             //TODO (1)
 
-                            TablePage page = new TablePage(UserName,(string) responceObj["token"], null);
+                            TablePage page = new TablePage(UserName,(string) responceObj["token"], null, URL);
                             page.Show();
-                            window.Close();
+                            CloseAction();
                         }
                         else
                         {
@@ -125,6 +115,16 @@ namespace ClientDB.ViewModel
             }
         }
 
+        RelayCommand closeCommand;
+
+        public RelayCommand CloseCommand
+        {
+            get
+            {
+                return closeCommand ??
+                                    (closeCommand = new RelayCommand(obj => { CloseAction();}));
+            }
+        }
 
     }
 }

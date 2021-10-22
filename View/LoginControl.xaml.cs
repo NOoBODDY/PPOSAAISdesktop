@@ -19,7 +19,7 @@ namespace ClientDB.View
     {
         
         string GetPassword();
-        int PasswordLength();
+
     }
     /// <summary>
     /// Логика взаимодействия для LoginControl.xaml
@@ -37,9 +37,5 @@ namespace ClientDB.View
             return pwdBox.Password;
         }
 
-        public int PasswordLength()
-        {
-            return pwdBox.Password.Length;
-        }
     }
 }

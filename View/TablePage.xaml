@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientDB.View"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Title="TablePage" Height="450" Width="800"
@@ -18,6 +19,11 @@
             CaptionHeight="0"
             ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding GetAllCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.3*"/>
@@ -46,7 +52,35 @@
                        Background="Transparent" 
                        MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
         <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <iconPacks:PackIconMaterial 
+            <local:IconButton Kind="WindowMaximize"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right" 
+                              Margin=" 0 5 5 5"
+                              Width="20"
+                              Height="20"
+                              BorderColor="Transparent"
+                              Command="{Binding MaximizeCommand}"
+                              />
+            <local:IconButton Kind="WindowMinimize"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right" 
+                              Margin=" 0 5 5 5"
+                              Width="20"
+                              Height="20"
+                              BorderColor="Transparent"
+                              Command="{Binding MinimizeCommand}"
+                              />
+            <local:IconButton Kind="Close"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right" 
+                              Margin=" 0 5 5 5"
+                              Width="20"
+                              Height="20"
+                              BorderColor="Transparent"
+                              Command="{Binding CloseCommand}"
+                              />
+
+            <!--<iconPacks:PackIconMaterial 
                                 Kind="WindowMaximize"
                                  VerticalAlignment="Center"
                                  HorizontalAlignment="Right" 
@@ -67,7 +101,7 @@
                                  HorizontalAlignment="Right" 
                                  Margin=" 0 5 5 5"
                                  Foreground="White"
-                                 MouseLeftButtonDown="CloseBT"/>
+                                 MouseLeftButtonDown="CloseBT"/>-->
             
         </StackPanel>
         
@@ -115,9 +149,13 @@
         <DataGrid Grid.Row="1" 
                   Grid.Column="2" 
                   Grid.RowSpan="2" 
-                  Style="{StaticResource DataGridStyle}"
+                  CellStyle="{StaticResource cellstyle1}"
+                  RowStyle="{StaticResource RowStyle1}"
+                  
+                  ColumnHeaderStyle="{StaticResource ColumnHeaderst1}"
                   AutoGenerateColumns="True"
                   ItemsSource="{Binding Students}"
+                  Style="{StaticResource dagagridst1}"
                   />
     </Grid>
 </Window>

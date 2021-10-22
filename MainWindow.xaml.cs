@@ -27,11 +27,13 @@ namespace ClientDB
         static string url = "http://80.87.192.94:8080";
         public MainWindow()
         {
+           
             InitializeComponent();
             IUnityContainer container = new UnityContainer();
             LoginControl loginControl = new LoginControl();
             container.RegisterInstance<IPasswordSupplier>(loginControl);
-            loginMV MVlogin = new loginMV(container, url, this);
+            loginMV MVlogin = new loginMV(container, url);
+            MVlogin.CloseAction = this.Close;
             loginControl.DataContext = MVlogin;
             DataContext = MVlogin;
             Grid.SetRow(loginControl, 2);
