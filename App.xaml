@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="View/ButtonTheme.xaml"/>
                 <ResourceDictionary Source="View/LoginBoxTheme.xaml"/>
                 <ResourceDictionary Source="View/DataGridTheme.xaml"/>
+                <ResourceDictionary Source="View/ExpanderPanel.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
