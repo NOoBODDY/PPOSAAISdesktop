@@ -35,10 +35,6 @@ namespace ClientDB.View
             DependencyProperty.Register("BorderColor", typeof(Color), typeof(IconButton));
 
 
-
-
-
-
         public MahApps.Metro.IconPacks.PackIconMaterialKind Kind
         {
             get { return (MahApps.Metro.IconPacks.PackIconMaterialKind)GetValue(KindProperty); }
@@ -105,20 +101,52 @@ namespace ClientDB.View
             c.btn.Height = Convert.ToDouble(e.NewValue);
         }
 
+        public int IconWidth
+        {
+            get { return (int)GetValue(IconWidthProperty); }
+            set { SetValue(IconWidthProperty, value); }
+        }
 
-        //bool needCircle;
-        //public bool NeedCircle { get { return needCircle;} 
-        //        set{ 
-        //            if (value)
-        //            {
-        //                BorderBrush = Brushes.White; 
-        //            }
-        //            else { BorderBrush = Brushes.Transparent; }
-        //            needCircle = value;
-        //        }
+        // Using a DependencyProperty as the backing store for IconWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IconWidthProperty =
+            DependencyProperty.Register("IconWidth", typeof(int), typeof(IconButton), new UIPropertyMetadata(IconWidthChange));
+        static void IconWidthChange(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var c = sender as IconButton;
+            c.icon.Width = Convert.ToDouble(e.NewValue);
+        }
 
-        //    }
-        //public Brush BorderBrush { get; set; }
+
+        public int IconHeight
+        {
+            get { return (int)GetValue(IconHeightProperty); }
+            set { SetValue(IconHeightProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IconHeight.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IconHeightProperty =
+            DependencyProperty.Register("IconHeight", typeof(int), typeof(IconButton), new UIPropertyMetadata(IconHeightChange));
+
+        static void IconHeightChange(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var c = sender as IconButton;
+            c.icon.Height = Convert.ToDouble(e.NewValue);
+        }
+
+
+
+        public bool needT
+        {
+            get { return (bool)GetValue(needTProperty); }
+            set { SetValue(needTProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for needT.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty needTProperty =
+            DependencyProperty.Register("needT", typeof(bool), typeof(IconButton), new PropertyMetadata(false));
+
+
+
         public IconButton()
         {
             InitializeComponent();

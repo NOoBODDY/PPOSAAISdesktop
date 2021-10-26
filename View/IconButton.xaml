@@ -13,20 +13,33 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Ellipse
-                             Width="{TemplateBinding Width}" 
-                             Height="{TemplateBinding Height}" 
-                             StrokeThickness="2" 
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Right"
-                             Margin="0 0 0 0">
+                        <Ellipse x:Name="ell"
+                                 Width="{TemplateBinding Width}" 
+                                 Height="{TemplateBinding Height}" 
+                                 StrokeThickness="2" 
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Right"
+                                 Opacity="0.25"
+                                 Margin="0 0 0 0">
                             <Ellipse.Stroke>
-                                <SolidColorBrush Color="{Binding BorderColor, RelativeSource={RelativeSource FindAncestor, AncestorType= {x:Type Color}}}"/>
+                                <SolidColorBrush Color="{Binding BorderColor, RelativeSource={RelativeSource AncestorType=local:IconButton, Mode=FindAncestor}}"/>
                             </Ellipse.Stroke>
                             <Ellipse.Fill>
                                 <SolidColorBrush Color="Transparent"/>
                             </Ellipse.Fill>
                         </Ellipse>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.Setters>
+                                    <Setter TargetName="ell" Property="Ellipse.Fill" Value="White"/>
+                                </Trigger.Setters>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Trigger.Setters>
+                                    <Setter TargetName="ell" Property="Ellipse.Fill" Value="Transparent"/>
+                                </Trigger.Setters>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -35,6 +48,8 @@
     <Grid>
         <iconPacks:PackIconMaterial x:Name="icon"
                                     Kind="{Binding Kind}"
+                                    Width="{Binding IconWidth}"
+                                    Height="{Binding IconHeight}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center" 
                                     Margin="0 0 0 0"
