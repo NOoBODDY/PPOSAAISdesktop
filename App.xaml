@@ -2,15 +2,18 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ClientDB"
-             StartupUri="MainWindow.xaml">
+             StartupUri="View/MainView.xaml">
+    <!--View/MainView.xaml-->
+    <!--LoginWindow.xaml-->
     <Application.Resources>
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="View/ButtonTheme.xaml"/>
-                <ResourceDictionary Source="View/LoginBoxTheme.xaml"/>
-                <ResourceDictionary Source="View/DataGridTheme.xaml"/>
-                <ResourceDictionary Source="View/ExpanderPanel.xaml"/>
+                <ResourceDictionary Source="Themes/LoginBoxTheme.xaml"/>
+                <ResourceDictionary Source="Themes/DarkTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Icons/Icons.xaml"/>
+                <ResourceDictionary Source="Styles/MainStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

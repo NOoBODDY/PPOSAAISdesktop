@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Media.Imaging;
 
 namespace ClientDB.Model
 {
@@ -46,5 +47,8 @@ namespace ClientDB.Model
                 OnPropertyChanged("JWT");
             }
         }
+
+        BitmapImage avatar;
+        public BitmapImage Avatar { get { return avatar; } set { avatar = value; OnPropertyChanged("Avatar"); } }
     }
 }

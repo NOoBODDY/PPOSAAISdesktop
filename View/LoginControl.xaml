@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientDB"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="400">
     <Grid>
@@ -17,7 +16,7 @@
                          FontWeight="Light"
                          FontSize="20"
                          HorizontalAlignment="Center"
-                         Foreground="White"
+                         Foreground="{DynamicResource PrimaryTextColor}"
                          Background="Transparent"
                          BorderThickness="0"
                          Width="230"
@@ -27,26 +26,28 @@
                          Margin="75 0 0 0"
                          Text="UserName"
                     />
-                <iconPacks:PackIconMaterial Kind="Account"
-                                 VerticalAlignment="Center"
-                                 HorizontalAlignment="Center" 
-                                            Foreground="White"/>
+                <Path Data="{DynamicResource account}"
+                      Fill="{DynamicResource MainIconColor}"
+                      VerticalAlignment="Center"
+                      Margin="-5 0 0 0"/>
+
             </StackPanel>
 
             <Border Width="250"
                     Height="2"
-                    Background="White"
+                    Background="{DynamicResource PrimaryTextColor}"
                     Opacity="0.5"/>
 
             <!--Password box-->
             <StackPanel  Orientation="Horizontal" Margin="0 20 0 0">
                 <PasswordBox 
                          x:Name="pwdBox"
+                         Style="{DynamicResource LightPBox}"
                          FontFamily="./#HelveticaLight"
                          FontWeight="Light"
                          FontSize="20"
                          HorizontalAlignment="Center"
-                         Foreground="White"
+                         Foreground="{DynamicResource PrimaryTextColor}"
                          Background="Transparent"
                          BorderThickness="0"
                          Width="230"
@@ -54,26 +55,28 @@
                          Opacity="0.6"
                          Height="25"
                          Margin="75 0 0 0"
-                         CaretBrush="White"
+                         CaretBrush="{DynamicResource PrimaryTextColor}"
                     />
-                <iconPacks:PackIconMaterial Kind="FormTextboxPassword"
-                                 VerticalAlignment="Center"
-                                 HorizontalAlignment="Center" 
-                                            Foreground="White"/>
+                <Path Data="{DynamicResource FormTextboxPassword}" 
+                      Fill="{DynamicResource MainIconColor}"
+                      VerticalAlignment="Center"
+                      Margin="-5 0 0 0"/>
+                
             </StackPanel>
 
             <Border Width="250"
                     Height="2"
-                    Background="White"
+                    Background="{DynamicResource PrimaryTextColor}"
                     Opacity="0.5"/>
             <!--<TextBox Template="{StaticResource tblockTemplate}" Text="Hello" HorizontalAlignment="Center" FontSize="20" Opacity="0.7" Width=" 250"/>-->
 
-            <Button Style="{DynamicResource LightButtTheme}" 
-                        Margin="0 50 0 0" 
-                        Width="100" 
-                        Height="40" 
-                        Content="ВХОД"
-                        Command="{Binding LoginCommand}"/>
+            <Button Style="{DynamicResource LightButtTheme}"
+                    Foreground="{DynamicResource PrimaryTextColor}"
+                    Margin="0 50 0 0" 
+                    Width="100" 
+                    Height="40" 
+                    Content="ВХОД"
+                    Command="{Binding LoginCommand}"/>
 
         </StackPanel>
     </Grid>

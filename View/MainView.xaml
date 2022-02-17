@@ -1,0 +1,118 @@
+﻿<Window x:Class="ClientDB.View.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ClientDB.ViewModel"
+        xmlns:local="clr-namespace:ClientDB.View"
+        d:DataContext="{d:DesignInstance {x:Type vm:MainViewModel}}"
+        mc:Ignorable="d"
+        Title="MainView" Height="450" Width="800"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        Name="Home">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
+    <Border CornerRadius="10" Background="{DynamicResource SecondaryBackgroundColor}">
+        
+            
+        <!--MainGrid-->
+        <DockPanel>
+
+            <!--Header:start-->
+            <Border DockPanel.Dock="Top" Height="30" VerticalAlignment="Top" >
+                <Grid>
+                    <TextBlock Background="Transparent" MouseLeftButtonDown="DragAndMove"/>
+                    <!--Перемещение-->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 5 5 0">
+                        <Button Content="{DynamicResource theme}"
+                                Style="{DynamicResource IconButtonsStyle}"
+                                Click="ChangeTheme"/>
+                        <Button Content="{DynamicResource minimize}" 
+                            Style="{DynamicResource IconButtonsStyle}"
+                            Click="MinimizeBT"/>
+                        <Button Content="{DynamicResource maximize}" Click="MaxBT">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IconButtonsStyle}">
+                                    <Setter Property="Content" Value="{DynamicResource maximize}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=home, Path=WindowState}" Value="Maximized">
+                                            <Setter Property="Content" Value="{DynamicResource restore}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Content="{DynamicResource close}" 
+                                Style="{DynamicResource IconButtonsStyle}" 
+                                Cursor="Hand"
+                                Tag="IsCloseButton"
+                                Click="CloseBT"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <!--Header:End-->
+
+            <!--LeftMenu-->
+
+            <TabControl Style="{DynamicResource LeftTab}" TabStripPlacement="Left">
+                <TabItem BorderThickness="0" Template="{DynamicResource TabItemTemplate}" >
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{DynamicResource table-account}" Fill="{DynamicResource PrimaryIconColor}"/>
+                            <Label Content="Таблица студентов" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <!--Start: table of students-->
+                    <!--<ListView ItemsSource="{Binding Students}" SelectedItem="">
+                        <ListView.Style>
+                            <Style TargetType="ListView">
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Style>
+                        </ListView.Style>
+                    </ListView>-->
+                    <DataGrid Style="{DynamicResource GridStyle}" 
+                              ItemsSource="{Binding Students}"
+                              AutoGenerateColumns="False"
+                              Background="{DynamicResource PrimaryBackgroundColor}"
+                              Margin="3"
+                              BorderBrush="Transparent"
+                              BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="100"/>
+                            <DataGridTextColumn Header="Фамилия" Binding="{Binding SurName}" Width="100"/>
+                            <DataGridTextColumn Header="Отчество" Binding="{Binding LastName}" Width="100"/>
+                            <DataGridTextColumn Header="Група" Binding="{Binding Group}" Width="50"/>
+                            <DataGridTextColumn Header="ПрофБилет" Binding="{Binding ProfileTicket}" Width="100"/>
+                        </DataGrid.Columns>
+                        
+                    </DataGrid>
+
+
+
+                        <!--<Label>asdasdasd</Label>-->
+                    <!--End: table of students-->
+                </TabItem>
+                <TabItem Template="{DynamicResource TabItemTemplate}">
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{DynamicResource add-user}" Fill="{DynamicResource PrimaryIconColor}"/>
+                            <Label Content="Добавить студента" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <!--Start: Add student-->
+                    <!--End: Add student-->
+                </TabItem>
+            </TabControl>
+            
+            
+        </DockPanel>
+
+
+    </Border>
+</Window>

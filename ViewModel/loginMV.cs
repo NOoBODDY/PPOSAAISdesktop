@@ -102,8 +102,8 @@ namespace ClientDB.ViewModel
 
                             //TODO (1)
 
-                            TablePage page = new TablePage(UserName,(string) responceObj["token"], null, URL);
-                            page.Show();
+                            //TablePage page = new TablePage(UserName,(string) responceObj["token"], null, URL);
+                            //page.Show();
                             CloseAction();
                         }
                         else

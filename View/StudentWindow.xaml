@@ -1,0 +1,219 @@
+﻿<Window x:Class="ClientDB.View.StudentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientDB.View"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="StudentWindow" Height="300" Width="700"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style x:Key="TBox" TargetType="TextBox" >
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="Transparent">
+                            <DockPanel>
+                                <TextBox VerticalAlignment="Stretch"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalAlignment="Stretch"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="{TemplateBinding Foreground}"
+                                     FontSize="{TemplateBinding FontSize}"
+                                     FontFamily="./#HelveticaLight"
+                                     CaretBrush="White"
+                                     Text="{TemplateBinding Text}"
+                                     DockPanel.Dock="Top"
+                                />
+                                <Border BorderBrush="White"  
+                                        BorderThickness="1"
+                                        Height="2"
+                                        Width="{TemplateBinding Width}"
+                                        Opacity="0.5"
+                                        DockPanel.Dock="Bottom"/>
+                            </DockPanel>
+                            
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="./#HelveticaLight"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style x:Key="Toggle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid>
+                            <Border BorderThickness="2" 
+                                    BorderBrush="White"
+                                    Background="Transparent"
+                                    CornerRadius="10">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Top"
+                                            CornerRadius="10"
+                                            BorderThickness="1" 
+                                            BorderBrush="White"
+                                            Background="Transparent">
+                                        <Label Content="{TemplateBinding Name}"/>
+                                    </Border>
+                                    <ToggleButton x:Name="togBtn"
+                                                  Width="30"
+                                                  Height="30"
+                                                  BorderBrush="White"
+                                                  Foreground="White"
+                                                  Background="Transparent"
+                                                  DockPanel.Dock="Bottom"
+                                                  >
+                                        <!--<local:IconButton x:Name="checkIcon"
+                                                          Kind="Check" 
+                                                          Visibility="Hidden"/>-->
+                                    </ToggleButton>
+                                </DockPanel>
+                                
+                            </Border>
+                        </Grid>
+                        <!--<ControlTemplate.Triggers>
+                            --><!--<Trigger SourceName="togBtn" Property="IsChecked"
+                                     Value="True">
+                                <Setter TargetName="checkIcon" Property="Visibility" Value="Visible"/>
+                            </Trigger>--><!--
+                            <Trigger SourceName="togBtn" Property="IsChecked"
+                                     Value="False">
+                                <Setter TargetName="checkIcon" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>-->
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Border CornerRadius="10" 
+                Grid.RowSpan="3" 
+                Grid.ColumnSpan="4"
+                BorderBrush="Black"
+                BorderThickness="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint=" 0.5, 0" EndPoint="0.5, 1">
+                    <GradientStop Color="#4169E1" Offset="0.2" />
+                    <GradientStop Color="#B0E0E6" Offset="1.1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <!--WindowUpBorder-->
+        <TextBlock  Grid.ColumnSpan="4"
+                    Background="Transparent" 
+                    MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Height="25"/>
+        <StackPanel Grid.Column="3" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top">
+            <!--<local:IconButton Kind="Close"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right" 
+                              Margin=" 0 5 5 5"
+                              Width="20"
+                              Height="20"
+                              IconWidth="15"
+                              IconHeight="15"
+                              BorderColor="Transparent"
+                              Command="{Binding CloseCommand}"
+                              />-->
+        </StackPanel>
+
+        <!--Text Fields-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Имя" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Фамилия" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Отчество" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Факультет" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Группа" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Форма обучения" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Профбилет №" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+                    <Label Content="Год вступления" Width="110"/>
+                    <TextBox Width="100" Style="{StaticResource TBox}"/>
+                </StackPanel>
+            </StackPanel>
+
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" Margin="5" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Horizontal" x:Name="SemPanel">
+                
+            </StackPanel>
+        </ScrollViewer>
+        
+        
+        
+    </Grid>
+</Window>

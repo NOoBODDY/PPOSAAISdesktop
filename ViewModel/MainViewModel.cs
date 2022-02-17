@@ -3,9 +3,12 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using ClientDB.Model;
+using ClientDB.View;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace ClientDB.ViewModel
 {
@@ -13,14 +16,15 @@ namespace ClientDB.ViewModel
     {
         static string stdUrl = "/api/students";
         string URL;
-
+        #region //interface
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
+        #endregion
+        #region //propetries
         Student selectedStudent;
         Account authorised;
         public Action CloseAction { get; set; }
@@ -50,12 +54,32 @@ namespace ClientDB.ViewModel
             }
         }
 
+        #endregion
+        public MainViewModel()
+        {
+            
+            Authorised = new Account { Name = "Алексей Осташов", Post = "Олух" };
+            Students = new ObservableCollection<Student>();
+            Students.Add(new Student { FirstName = "Алексей", SurName = "Осташов", LastName = "Сергеевич", Group = "4941", ProfileTicket = "123456" });
+            Students.Add(new Student { FirstName = "Дмитрий", SurName = "Голощапов", LastName = "Алексеевич", Group = "4941", ProfileTicket = "123457" });
+            Students.Add(new Student { FirstName = "Юрий", SurName = "Гуков", LastName = "Игоревич", Group = "4941", ProfileTicket = "123458" });
+            Students.Add(new Student { FirstName = "Никита", SurName = "Горбунов", LastName = "Сергеевич", Group = "4941", ProfileTicket = "123459" });;
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri("Images/alecksei.jpg", UriKind.Relative);
+            bi.EndInit();
+            Authorised.Avatar = bi;
+ 
+        }
+
+
         public MainViewModel(string url)
         {
             URL = url;
             Students = new ObservableCollection<Student>();
         }
 
+        #region //commands
         private RelayCommand addCommand;
         public RelayCommand AddCommand
         {
@@ -64,7 +88,8 @@ namespace ClientDB.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand(obj =>
                   {
-                      //Students.Add(new Student { FirstName = "gorbunov", SurName = "N", LastName = "", Group = "4941", Faculty = "4", ProfileTicket = "123459", StudyForm = "B", YearOfJoining = "2019" });
+                      StudentWindow window = new StudentWindow();
+                      window.ShowDialog();
                   }));
             }
         }
@@ -129,5 +154,31 @@ namespace ClientDB.ViewModel
                     (closeCommand = new RelayCommand(obj => { CloseAction(); }));
             }
         }
+
+        RelayCommand editCommand;
+        public RelayCommand EditCommand
+        {
+            get
+            {
+                return editCommand ??
+                    (editCommand = new RelayCommand(obj =>
+                    {
+
+                    }));
+            }
+        }
+        RelayCommand delCommand;
+        public RelayCommand DelCommand
+        {
+            get
+            {
+                return delCommand ??
+                    (delCommand = new RelayCommand(obj =>
+                    {
+
+                    }));
+            }
+        }
+        #endregion
     }
 }
