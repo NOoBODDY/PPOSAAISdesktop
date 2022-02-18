@@ -201,6 +201,12 @@
                 </Style>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Students2.IsLoading}" Value="True">
+                <Setter Property="DataGrid.Cursor" Value="Wait"/>
+                <Setter Property="DataGrid.Background" Value="LightGray"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     

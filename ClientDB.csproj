@@ -88,7 +88,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="APIservice.cs" />
+    <Compile Include="InDev\Designer.xaml.cs">
+      <DependentUpon>Designer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Account.cs" />
+    <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="ViewModel\EditVM.cs" />
     <Compile Include="ViewModel\loginMV.cs" />
@@ -105,6 +110,14 @@
     <Compile Include="View\StudentWindow.xaml.cs">
       <DependentUpon>StudentWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VirtualizingCollection\AsyncVirtualizingCollection.cs" />
+    <Compile Include="VirtualizingCollection\IItemsProvider.cs" />
+    <Compile Include="VirtualizingCollection\StudentProvider.cs" />
+    <Compile Include="VirtualizingCollection\VirtualizingCollection.cs" />
+    <Page Include="InDev\Designer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

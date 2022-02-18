@@ -18,6 +18,51 @@
         <WindowChrome CaptionHeight="0"
                       ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style x:Key="lvStyle" TargetType="{x:Type ListView}">
+            <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="True"/>
+            <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryBorderColor}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextColor}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Customers.IsLoading}" Value="True">
+                    <Setter Property="ListView.Cursor" Value="Wait"/>
+                    <Setter Property="ListView.Background" Value="LightGray"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextColor}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Background" Value="{DynamicResource PrimaryPanelColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SecondaryBorderColor}"/>
+        </Style>
+    </Window.Resources>
+    
+    
     <Border CornerRadius="10" Background="{DynamicResource SecondaryBackgroundColor}">
         
             
@@ -76,22 +121,38 @@
                             </Style>
                         </ListView.Style>
                     </ListView>-->
-                    <DataGrid Style="{DynamicResource GridStyle}" 
-                              ItemsSource="{Binding Students}"
+
+
+
+                    <ListView Margin="5" Style="{DynamicResource lvStyle}" ItemsSource="{Binding Students}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"/>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <!--<DataGrid Style="{DynamicResource GridStyle}" 
+                              ItemsSource="{Binding Customers}"
                               AutoGenerateColumns="False"
                               Background="{DynamicResource PrimaryBackgroundColor}"
                               Margin="3"
                               BorderBrush="Transparent"
-                              BorderThickness="0">
+                              BorderThickness="0"
+                              VirtualizingStackPanel.IsVirtualizing ="True"
+                              VirtualizingStackPanel.VirtualizationMode ="Recycling"
+                              ScrollViewer.IsDeferredScrollingEnabled ="True"
+                              >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="100"/>
                             <DataGridTextColumn Header="Фамилия" Binding="{Binding SurName}" Width="100"/>
                             <DataGridTextColumn Header="Отчество" Binding="{Binding LastName}" Width="100"/>
                             <DataGridTextColumn Header="Група" Binding="{Binding Group}" Width="50"/>
                             <DataGridTextColumn Header="ПрофБилет" Binding="{Binding ProfileTicket}" Width="100"/>
+                            <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="100"/>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="100"/>
                         </DataGrid.Columns>
-                        
-                    </DataGrid>
+                    </DataGrid>-->
 
 
 
