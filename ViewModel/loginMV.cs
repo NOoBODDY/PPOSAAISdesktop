@@ -8,7 +8,6 @@ using ClientDB.View;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using System.IdentityModel.Tokens.Jwt;
 
 //TODO 
 //(1)добавить проверку на админа, когда будет функционал
