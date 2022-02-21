@@ -6,17 +6,16 @@ using ClientDB.Model;
 using ClientDB.View;
 using ClientDB.VirtualizingCollection;
 using System.Net;
-using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
-using System.Windows.Controls;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace ClientDB.ViewModel
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        static string stdUrl = "/api/students";
-        string URL;
         #region //interface
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -26,23 +25,8 @@ namespace ClientDB.ViewModel
         }
         #endregion
         #region //propetries
-        Student selectedStudent;
+
         Account authorised;
-        public Action CloseAction { get; set; }
-        public Action MinimizeAction { get; set; }
-        public Action MaximizeAction { get; set; }
-
-        public ObservableCollection<string> Filters { get; set; }
-
-        public Student SelectedStudent
-        {
-            get { return selectedStudent; }
-            set
-            {
-                selectedStudent = value;
-                OnPropertyChanged("SelectedStudent");
-            }
-        }
 
         public Account Authorised
         {
@@ -54,38 +38,188 @@ namespace ClientDB.ViewModel
             }
         }
 
-        public AsyncVirtualizingCollection<Student> Students { get; set; }
-        public AsyncVirtualizingCollection<Customer> Customers { get; set; }
+        AsyncVirtualizingCollection<Student> students;
+        public AsyncVirtualizingCollection<Student> Students 
+        {
+            get { return students; }
+            set { students = value; OnPropertyChanged("Students"); }
+        }
+
+        APIservice api;
+
+        Student selectedStudent;
+        public Student SelectedStudent { get { return selectedStudent; } set { selectedStudent = value; OnPropertyChanged("SelectedStudent"); } } 
+
+        #region FilterMenu
+        bool filterMenuVisibility = false;
+        public Visibility FilterMenuVisibility
+        {
+            get { return filterMenuVisibility ? Visibility.Visible : Visibility.Collapsed; }
+            set
+            {
+                filterMenuVisibility = value == Visibility.Visible;
+                OnPropertyChanged("FilterMenuVisibility");
+            }
+        }
+
+        private double _panelX;
+        private double _panelY;
+
+        public double PanelX
+        {
+            get { return _panelX; }
+            set
+            {
+                if (value.Equals(_panelX)) return;
+                _panelX = value;
+                OnPropertyChanged("PanelX");
+            }
+        }
+
+        public double PanelY
+        {
+            get { return _panelY; }
+            set
+            {
+                if (value.Equals(_panelY)) return;
+                _panelY = value;
+                OnPropertyChanged("PanelY");
+            }
+        }
+
+        private double filterMenuX;
+        private double filterMenuY;
+        public double FilterMenuX
+        {
+            get { return filterMenuX; }
+            set
+            {
+                ;
+                filterMenuX = value;
+                OnPropertyChanged("FilterMenuX");
+            }
+        }
+
+        public double FilterMenuY
+        {
+            get { return filterMenuY; }
+            set
+            {
+                filterMenuY = value;
+                OnPropertyChanged("FilterMenuY");
+            }
+        }
+
+        double filterMenuHeight;
+        public double FilterMenuHeight { get { return filterMenuHeight; } set { filterMenuHeight = value; OnPropertyChanged("FilterMenuHeight"); } }
+        double filterMenuWidth;
+        public double FilterMenuWidth { get { return filterMenuWidth; } set { filterMenuWidth = value; OnPropertyChanged("FilterMenuWidth"); } }
+
+        public ObservableCollection<Filter> Filters { get; set; }
+        Filter selectedFilter;
+        public Filter SelectedFilter { get { return selectedFilter; } set { selectedFilter = value; OnPropertyChanged("SelectedFilter"); } }
+
+        
+
 
         #endregion
-        public MainViewModel()
+
+        #region AddStudent
+
+        Student newStudent;
+        public Student NewStudent { get { return newStudent; } set { newStudent = value; OnPropertyChanged("NewStudent"); } }
+
+
+        #endregion
+
+        bool tabActiveEdit;
+        public bool TabActiveEdit { get { return tabActiveEdit; } set { tabActiveEdit = value; OnPropertyChanged("TabActiveEdit"); } }
+
+
+
+
+
+
+        #endregion
+
+        #region Constructor
+        public MainViewModel(APIservice API)
         {
-            
-            Authorised = new Account { Name = "Алексей Осташов", Post = "Олух" };
-            //Students = new ObservableCollection<Student>();
-            //Students.Add(new Student { FirstName = "Алексей", SurName = "Осташов", LastName = "Сергеевич", Group = "4941", ProfileTicket = "123456" });
-            //Students.Add(new Student { FirstName = "Дмитрий", SurName = "Голощапов", LastName = "Алексеевич", Group = "4941", ProfileTicket = "123457" });
-            //Students.Add(new Student { FirstName = "Юрий", SurName = "Гуков", LastName = "Игоревич", Group = "4941", ProfileTicket = "123458" });
-            //Students.Add(new Student { FirstName = "Никита", SurName = "Горбунов", LastName = "Сергеевич", Group = "4941", ProfileTicket = "123459" });;
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri("Images/alecksei.jpg", UriKind.Relative);
-            bi.EndInit();
-            Authorised.Avatar = bi;
-            StudentProvider provider = new StudentProvider(4000, 400);
+            api = API;
+            Authorised = api.GetAccount();
+            StudentProvider provider = new StudentProvider(api);
             Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
-            //DemoCustomerProvider provider = new DemoCustomerProvider(4000, 400);
-            //Customers = new AsyncVirtualizingCollection<Customer>(provider, 100, 30000);
+            FilterMenuWidth = 300;
+            FilterMenuHeight = 100;
+            Filters = new ObservableCollection<Filter>();
+            NewStudent = new Student();
+
         }
+        #endregion
 
 
-        public MainViewModel(string url)
+        #region Commands
+
+        #region FilterMenu
+        private RelayCommand openFilterMenu;
+        public RelayCommand OpenFilterMenu
         {
-            URL = url;
-            //Students = new ObservableCollection<Student>();
+            get
+            {
+                return openFilterMenu ??
+                  (openFilterMenu = new RelayCommand(obj =>
+                  {
+
+                      FilterMenuVisibility = Visibility.Visible;
+                      FilterMenuX = PanelX - FilterMenuWidth;
+                      FilterMenuY = PanelY - FilterMenuHeight;
+                  }));
+            }
         }
 
-        #region //commands
+        private RelayCommand closeFilterMenu;
+        public RelayCommand CloseFilterMenu
+        {
+            get
+            {
+                return closeFilterMenu ??
+                  (closeFilterMenu = new RelayCommand(obj =>
+                  {
+                      FilterMenuVisibility = Visibility.Collapsed;
+                      api.Filters = Filters.ToList();
+                  }));
+            }
+        }
+
+        private RelayCommand addFilter;
+        public RelayCommand AddFilter
+        {
+            get
+            {
+                return addFilter ??
+                  (addFilter = new RelayCommand(obj =>
+                  {
+                      Filters.Add(new Filter());
+                  }));
+            }
+        }
+
+        private RelayCommand deleteFilter;
+        public RelayCommand DeleteFilter
+        {
+            get
+            {
+                return deleteFilter ??
+                  (deleteFilter = new RelayCommand(obj =>
+                  {
+                      Filters.Remove((Filter)obj);
+                  }));
+            }
+        }
+        #endregion
+
+
+
         private RelayCommand addCommand;
         public RelayCommand AddCommand
         {
@@ -94,72 +228,25 @@ namespace ClientDB.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand(obj =>
                   {
-                      StudentWindow window = new StudentWindow();
-                      window.ShowDialog();
+                      Task task = new Task(() =>
+                        {
+                             api.AddStudent(NewStudent);
+                             NewStudent = new Student();
+                             lock(students)
+                             {
+                                 StudentProvider provider = new StudentProvider(api);
+                                 Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
+                             }
+                        });
+                      
                   }));
             }
         }
 
-        private RelayCommand getAllCommand;
-        public RelayCommand GetAllCommand
-        {
-            get
-            {
-                return getAllCommand ??
-                    (getAllCommand = new RelayCommand(obj =>
-                    {
-                        WebRequest webRequest = WebRequest.Create(URL + stdUrl + "/getAll");
-                        webRequest.Method = "GET";
-                        webRequest.Headers.Add("Authorization", "Bearer_" + Authorised.JWT);
-                        webRequest.ContentType = "application/x-www-form-urlencoded";
-                        WebResponse webResponse = webRequest.GetResponse();
-                        string response;
-                        using (Stream stream = webResponse.GetResponseStream())
-                        {
-                            using (StreamReader reader = new StreamReader(stream))
-                            {
-                                response = reader.ReadToEnd();
-                            }
-                        }
-                        webResponse.Close();
+       
 
-                        JArray StdArray = JArray.Parse(response);
-                        foreach ( JObject i in StdArray)
-                        {
-                            Students.Add(new Student(i));
-                        }
+       
 
-                    }));
-            }
-        }
-
-        private RelayCommand maximizeCommand;
-        public RelayCommand MaximizeCommand
-        {
-            get
-            {
-                return maximizeCommand ??
-                    (maximizeCommand = new RelayCommand(obj => { MaximizeAction(); }));
-            }
-        }
-        private RelayCommand minimizeCommand;
-        public RelayCommand MinimizeCommand
-        {
-            get
-            {
-                return minimizeCommand ??
-                    (minimizeCommand = new RelayCommand(obj => { MinimizeAction(); }));
-            }
-        }
-        private RelayCommand closeCommand;
-        public RelayCommand CloseCommand
-        {
-            get
-            {
-                return closeCommand ??
-                    (closeCommand = new RelayCommand(obj => { CloseAction(); }));
-            }
-        }
 
         RelayCommand editCommand;
         public RelayCommand EditCommand
@@ -169,22 +256,12 @@ namespace ClientDB.ViewModel
                 return editCommand ??
                     (editCommand = new RelayCommand(obj =>
                     {
-
+                        NewStudent = SelectedStudent;
+                        TabActiveEdit = true;
                     }));
             }
         }
-        RelayCommand delCommand;
-        public RelayCommand DelCommand
-        {
-            get
-            {
-                return delCommand ??
-                    (delCommand = new RelayCommand(obj =>
-                    {
-
-                    }));
-            }
-        }
+        
         #endregion
     }
 }

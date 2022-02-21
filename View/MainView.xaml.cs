@@ -21,12 +21,14 @@ namespace ClientDB.View
     public partial class MainView : Window
     {
         bool fullScreen = false;
-        bool theme = false;
-        public MainView()
+        bool theme = true;
+        public MainView(APIservice api)
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            DataContext = new MainViewModel(api);
         }
+
+
         private void CloseBT(object sender, RoutedEventArgs e)
         {
             this.Close();

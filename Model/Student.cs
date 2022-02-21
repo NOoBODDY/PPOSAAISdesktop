@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace ClientDB.Model
 {
@@ -13,114 +15,84 @@ namespace ClientDB.Model
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        public string firstname;
-        public string middlename;
-        public string lastname;
-        public string group;
-        public string faculty;
-        public string profileTicketNumber;
-        public string formOfStudy;
-        public string dateOfEntry;
-        public bool paymentForCurrentSemester;
+        string Firstname;
+        string Middlename;
+        string Lastname;
+        string Group;
+        string faculty;
+        string ProfileTicketNumber;
+        string FormOfStudy;
+        string DateOfEntry;
+        FormOfStudyEnum formofstudyenum;
 
-        public int id { get; set; }
+        public FormOfStudyEnum Formofstudyenum
+        {
+            get { return formofstudyenum;}
+            set { formofstudyenum = value; OnPropertyChanged("Formofstudyenum"); }
+        }
+
+        [JsonIgnore]
+        public int id;
+        string Phone;
+        [JsonIgnore]
         public object email { get; set; }
-        public string phone { get; set; }
+        
+        [JsonIgnore]
         public object address { get; set; }
+        [JsonIgnore]
         public string status { get; set; }
+        [JsonIgnore]
         public object dateOfLeaving { get; set; }
+        [JsonIgnore]
         public object[] materialAidList { get; set; }
+        [JsonIgnore]
         public Ticketextension[] ticketExtensions { get; set; }
+        [JsonIgnore]
         public object[] rolesInGroup { get; set; }
+        [JsonIgnore]
         public object[] rolesInPPOSA { get; set; }
+        [JsonIgnore]
         public object[] documents { get; set; }
-
-        //public class Rootobject
-        //{
-        //    public int id { get; set; }
-        //    public string firstname { get; set; }
-        //    public string middlename { get; set; }
-        //    public string lastname { get; set; }
-        //    public object email { get; set; }
-        //    public string group { get; set; }
-        //    public string phone { get; set; }
-        //    public string formOfStudy { get; set; }
-        //    public int profileTicketNumber { get; set; }
-        //    public object address { get; set; }
-        //    public string status { get; set; }
-        //    public string dateOfEntry { get; set; }
-        //    public object dateOfLeaving { get; set; }
-        //    public object[] materialAidList { get; set; }
-        //    public Ticketextension[] ticketExtensions { get; set; }
-        //    public object[] rolesInGroup { get; set; }
-        //    public object[] rolesInPPOSA { get; set; }
-        //    public object[] documents { get; set; }
-        //}
-
-       
-
-        public Student()
+        public string firstname
         {
-
-        }
-
-
-        public Student(JObject StdObject)
-        {
-            FirstName = (string)StdObject["firstName"];
-            SurName = (string)StdObject["surName"];
-            LastName = (string)StdObject["lastName"];
-            Group = (string)StdObject["group"];
-            ProfileTicket = (string)StdObject["profileTicket"];
-            PaymentForCurrentSemester = (bool)StdObject["paymentForCurrentSemester"];
-
-            if (FirstName == null || SurName == null || LastName == null || Group == null || ProfileTicket == null)
-            {
-                throw new InvalidEnumArgumentException("JSON havent parsed");
-            }
-        }
-
-
-        public string FirstName
-        {
-            get { return firstname; }
+            get { return Firstname; }
             set
             {
-                firstname = value;
-                OnPropertyChanged("FirstName");
+                Firstname = value;
+                OnPropertyChanged("firstname");
             }
         }
 
-        public string SurName
+        public string lastname
         {
-            get { return middlename; }
+            get { return Lastname; }
             set
             {
-                middlename = value;
-                OnPropertyChanged("SurName");
+                Lastname = value;
+                OnPropertyChanged("lastname");
             }
         }
 
-        public string LastName
+        public string middlename
         {
-            get { return lastname; }
+            get { return Middlename; }
             set
             {
-                lastname = value;
-                OnPropertyChanged("LastName");
+                Middlename = value;
+                OnPropertyChanged("middlename");
             }
         }
 
-        public string Group
+        public string group
         {
-            get { return group; }
+            get { return Group; }
             set
             {
-                group = value;
-                OnPropertyChanged("Group");
+                Group = value;
+                OnPropertyChanged("group");
             }
         }
-
+        [JsonIgnore]
         public string Faculty
         {
             get { return faculty; }
@@ -130,42 +102,69 @@ namespace ClientDB.Model
                 OnPropertyChanged("Faculty");
             }
         }
-        public string ProfileTicket
+        public string profileTicketNumber
         {
-            get { return profileTicketNumber; }
+            get { return ProfileTicketNumber; }
             set
             {
-                profileTicketNumber = value;
-                OnPropertyChanged("ProfileTicket");
+                ProfileTicketNumber = value;
+                OnPropertyChanged("profileTicketNumber");
             }
         }
-        public string StudyForm
+
+        public string formOfStudy
         {
-            get { return formOfStudy; }
+            get { return GetDescription(formofstudyenum); }
             set
             {
-                formOfStudy = value;
-                OnPropertyChanged("StudyForm");
+                FormOfStudy = value;
+                OnPropertyChanged("formOfStudy");
             }
         }
-        public string YearOfJoining
+        public string dateOfEntry
         {
-            get { return dateOfEntry; }
+            get { return DateOfEntry; }
             set
             {
-                dateOfEntry = value;
-                OnPropertyChanged("YearOfJoining");
+                DateOfEntry = value;
+                OnPropertyChanged("dateOfEntry");
             }
+
         }
-        public bool PaymentForCurrentSemester
+        
+        public string phone
         {
-            get { return paymentForCurrentSemester; }
+            get { return Phone; } 
             set
             {
-                paymentForCurrentSemester = value;
-                OnPropertyChanged("PaymentForCurrentSemester");
+                Phone = value;
+                OnPropertyChanged("phone");
             }
         }
+       
+
+
+
+        public Student()
+        {
+
+        }
+
+        static string GetDescription(Enum enumElement)
+        {
+            Type type = enumElement.GetType();
+
+            MemberInfo[] memInfo = type.GetMember(enumElement.ToString());
+            if (memInfo != null && memInfo.Length > 0)
+            {
+                object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                if (attrs != null && attrs.Length > 0)
+                    return ((DescriptionAttribute)attrs[0]).Description;
+            }
+
+            return enumElement.ToString();
+        }
+
     }
 
     public class Ticketextension
@@ -180,4 +179,6 @@ namespace ClientDB.Model
         public int id { get; set; }
         public string title { get; set; }
     }
+
+
 }

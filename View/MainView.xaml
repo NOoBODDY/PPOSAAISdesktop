@@ -4,7 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ClientDB.ViewModel"
-        xmlns:local="clr-namespace:ClientDB.View"
+        xmlns:m="clr-namespace:ClientDB.Model"
+        xmlns:cv="clr-namespace:ClientDB.Converters"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:local="clr-namespace:ClientDB"
         d:DataContext="{d:DesignInstance {x:Type vm:MainViewModel}}"
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800"
@@ -19,11 +22,19 @@
                       ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
     <Window.Resources>
+        <cv:EnumConverter x:Key="EnumConverter"/>
+        <Style TargetType="ToolTip">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextColor }"/>
+        </Style>
+        
         <Style x:Key="lvStyle" TargetType="{x:Type ListView}">
             <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
             <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
             <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="True"/>
             <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}"/>
+            <Setter Property="Border.CornerRadius" Value="10"/>
             <Setter Property="SelectionMode" Value="Single"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="ItemContainerStyle">
@@ -45,9 +56,10 @@
                     </Style>
                 </Setter.Value>
             </Setter>
-            
+
+
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Customers.IsLoading}" Value="True">
+                <DataTrigger Binding="{Binding Students.IsLoading}" Value="True">
                     <Setter Property="ListView.Cursor" Value="Wait"/>
                     <Setter Property="ListView.Background" Value="LightGray"/>
                 </DataTrigger>
@@ -59,121 +71,276 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Background" Value="{DynamicResource PrimaryPanelColor}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource SecondaryBorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewColumnHeader">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10 10 0 0"
+                                Height="AUTO">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+
+                        <!--<Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                CornerRadius="10"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Height="Auto">
+                            <Label Content="{TemplateBinding Content}" 
+                                   Background="Transparent" 
+                                   Foreground="{TemplateBinding Foreground}" 
+                                   FontSize="{TemplateBinding FontSize}"
+                                   Height="Auto"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+                        </Border>-->
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <!--<Setter Property="" Value="10 10 10 10"/>-->
         </Style>
+
+        <GridViewColumnCollection x:Key="columns">
+            <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding FirstName}" Width="100"/>
+            <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding SurName}" Width="100"/>
+            <GridViewColumn Header="Отчество" DisplayMemberBinding="{Binding LastName}" Width="100"/>
+            <GridViewColumn Header="Група" DisplayMemberBinding="{Binding Group}" Width="50"/>
+            <GridViewColumn Header="ПрофБилет" DisplayMemberBinding="{Binding ProfileTicket}" Width="100"/>
+        </GridViewColumnCollection>
     </Window.Resources>
-    
-    
-    <Border CornerRadius="10" Background="{DynamicResource SecondaryBackgroundColor}">
+
+
+    <Canvas>
+        <Border CornerRadius="10" Background="{DynamicResource SecondaryBackgroundColor}"
+                Height="{Binding ElementName=Home, Path=Height}"
+                Width="{Binding ElementName=Home, Path=Width}">
         
             
-        <!--MainGrid-->
-        <DockPanel>
+            <!--MainGrid-->
+            <DockPanel>
 
-            <!--Header:start-->
-            <Border DockPanel.Dock="Top" Height="30" VerticalAlignment="Top" >
-                <Grid>
-                    <TextBlock Background="Transparent" MouseLeftButtonDown="DragAndMove"/>
-                    <!--Перемещение-->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 5 5 0">
-                        <Button Content="{DynamicResource theme}"
+                <!--Header:start-->
+                <Border DockPanel.Dock="Top" Height="30" VerticalAlignment="Top" Panel.ZIndex="0">
+                    <Grid>
+                        <TextBlock Background="Transparent" MouseLeftButtonDown="DragAndMove"/>
+                        <!--Перемещение-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 5 5 0">
+                            <Button Content="{DynamicResource theme}"
+                                    Style="{DynamicResource IconButtonsStyle}"
+                                    Click="ChangeTheme"
+                                    ToolTip="Сменить тему"/>
+                            <Button Content="{DynamicResource minimize}" 
                                 Style="{DynamicResource IconButtonsStyle}"
-                                Click="ChangeTheme"/>
-                        <Button Content="{DynamicResource minimize}" 
-                            Style="{DynamicResource IconButtonsStyle}"
-                            Click="MinimizeBT"/>
-                        <Button Content="{DynamicResource maximize}" Click="MaxBT">
-                            <Button.Style>
-                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IconButtonsStyle}">
-                                    <Setter Property="Content" Value="{DynamicResource maximize}"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=home, Path=WindowState}" Value="Maximized">
-                                            <Setter Property="Content" Value="{DynamicResource restore}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        <Button Content="{DynamicResource close}" 
-                                Style="{DynamicResource IconButtonsStyle}" 
-                                Cursor="Hand"
-                                Tag="IsCloseButton"
-                                Click="CloseBT"/>
+                                Click="MinimizeBT"/>
+                            <Button Content="{DynamicResource maximize}" Click="MaxBT">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IconButtonsStyle}">
+                                        <Setter Property="Content" Value="{DynamicResource maximize}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=home, Path=WindowState}" Value="Maximized">
+                                                <Setter Property="Content" Value="{DynamicResource restore}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                            <Button Content="{DynamicResource close}" 
+                                    Style="{DynamicResource IconButtonsStyle}" 
+                                    Cursor="Hand"
+                                    Tag="IsCloseButton"
+                                    Click="CloseBT"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <!--Header:End-->
+
+                <!--LeftMenu-->
+
+                <TabControl Style="{DynamicResource LeftTab}" TabStripPlacement="Left">
+                    <TabItem BorderThickness="0" Template="{DynamicResource TabItemTemplate}">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{DynamicResource table-account}" Fill="{DynamicResource PrimaryIconColor}"/>
+                                <Label Content="Таблица студентов" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <!--Start: table of students-->
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Bottom" 
+                                    Height="35" 
+                                    BorderBrush="{DynamicResource PrimaryBorderColor}"
+                                    BorderThickness="0 1 0 1"
+                                    CornerRadius="0 0 10 0"
+                                    Background="{DynamicResource PrimaryPanelColor}">
+                                <Button Style="{DynamicResource IconButtonsStyle}"
+                                        Content="{DynamicResource filter}"
+                                        HorizontalAlignment="Right"
+                                        Margin="0 0 5 0"
+                                        Command="{Binding OpenFilterMenu}"
+                                        ToolTip="Фильтры"/>
+                            </Border>
+                            <ListView Margin="0" Style="{DynamicResource lvStyle}" ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding lastname}" Width="100"/>
+                                        <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding firstname}" Width="100"/>
+                                        <GridViewColumn Header="Отчество" DisplayMemberBinding="{Binding middlename}" Width="100"/>
+                                        <GridViewColumn Header="Група" DisplayMemberBinding="{Binding group}" Width="50"/>
+                                        <GridViewColumn Header="ПрофБилет" DisplayMemberBinding="{Binding profileTicketNumber}" Width="100"/>
+                                    </GridView>
+                                </ListView.View>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction Command="{Binding EditCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ListView>
+                        
+                        
+                        </DockPanel>
+                    
+                        <!--End: table of students-->
+                    </TabItem>
+                    <TabItem Template="{DynamicResource TabItemTemplate}" IsSelected="{Binding TabActiveEdit }">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{DynamicResource add-user}" Fill="{DynamicResource PrimaryIconColor}"/>
+                                <Label Content="Добавить студента" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </TabItem.Header>
+                        
+                        
+                        <!--Start: Add student-->
+                        <StackPanel>
+                            <TextBox Width="150" Height="30" 
+                                     Text="{Binding NewStudent.lastname, Mode=TwoWay}" 
+                                     Style="{DynamicResource inputBox}"
+                                     HorizontalAlignment="Left"
+                                     Tag="Фамилия"
+                                     Margin="5 5 0 0"/>
+                            <TextBox Width="150" Height="30" 
+                                     Text="{Binding NewStudent.firstname, Mode=TwoWay}"
+                                     Style="{DynamicResource inputBox}"
+                                     HorizontalAlignment="Left"
+                                     Tag="Имя"
+                                     Margin="5 5 0 0"/>
+                            <TextBox Width="150" Height="30" 
+                                     Text="{Binding NewStudent.middlename, Mode=TwoWay}"
+                                     Style="{DynamicResource inputBox}"
+                                     HorizontalAlignment="Left"
+                                     Tag="Отчество"
+                                     Margin="5 5 0 0"/>
+                            <TextBox Width="150" Height="30" 
+                                     Text="{Binding NewStudent.group, Mode=TwoWay}"
+                                     Style="{DynamicResource inputBox}"
+                                     HorizontalAlignment="Left"
+                                     Tag="Группа"
+                                     Margin="5 5 0 0"/>
+
+                            <TextBox Width="150" Height="30" 
+                                     Text="{Binding NewStudent.phone, Mode=TwoWay}"
+                                     Style="{DynamicResource inputBox}"
+                                     HorizontalAlignment="Left"
+                                     Tag="Телефон"
+                                     Margin="5 5 0 0"/>
+                            <TextBox Width="150" Height="30"  
+                                     Text="{Binding NewStudent.dateOfEntry, Mode=TwoWay}"
+                                     Style="{DynamicResource inputBox}"
+                                     HorizontalAlignment="Left"
+                                     Tag="Дата вступления"
+                                     Margin="5 5 0 0"/>
+                            <TextBox Width="150" Height="30" 
+                                     Text="{Binding NewStudent.profileTicketNumber, Mode=TwoWay}"
+                                     Style="{DynamicResource inputBox}"
+                                     HorizontalAlignment="Left"
+                                     Tag="Номер профбилета"
+                                     Margin="5 5 0 0"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Label Style="{DynamicResource LabelStyle}" Content="Форма обучения"/>
+                                <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FormOfStudyEnum }}}" 
+                                          SelectedValue="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum}}"
+                                          DockPanel.Dock="Top"/>
+                            </StackPanel>
+                            <Button Content="Добавить\отредактировать" Height="30" Width="190" Command="{Binding AddCommand}"/>
+                        </StackPanel>
+                        <!--End: Add student-->
+                    </TabItem>
+                </TabControl>
+            
+            
+            </DockPanel>
+
+
+        </Border>
+        <Border x:Name="FilterMenu" Panel.ZIndex="1" 
+                Width="{Binding FilterMenuWidth}" Height="{Binding FilterMenuHeight}"
+                BorderThickness="1"
+                CornerRadius="10"
+                BorderBrush="{DynamicResource PrimaryBorderColor}"
+                Background="{DynamicResource PrimaryBackgroundColor}"
+                Visibility="{Binding FilterMenuVisibility}"
+                FocusManager.IsFocusScope="True"
+                Canvas.Left="{Binding FilterMenuX}"
+                Canvas.Top="{Binding FilterMenuY}">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="5 5 0 5">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                    <ListBox x:Name="FiltersBox" ItemsSource="{Binding Filters}"
+                             SelectedItem="{Binding SelectedFilter}"
+                             Background="Transparent"
+                             HorizontalAlignment="Left"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             BorderBrush="{DynamicResource SecondaryBorderColor}"
+                             BorderThickness="0">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Background="Transparent" Margin="0 3 0 0" VerticalAlignment="Top">
+                                    <Button Style="{DynamicResource IconButtonsStyle}"
+                                            Content="{DynamicResource delete}"
+                                            Command="{Binding ElementName=Home , Path=DataContext.DeleteFilter}"
+                                            CommandParameter="{Binding }"
+                                            DockPanel.Dock="Top"
+                                            ToolTip="Удалить"/>
+                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FilterType }}}" 
+                                              SelectedValue="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FilterType}}"
+                                              DockPanel.Dock="Top"/>
+                                    <TextBox Text="{Binding FilterValue}" 
+                                             Background="{DynamicResource PrimaryBackgroundColor}" 
+                                             TextWrapping="Wrap" 
+                                             Foreground="{DynamicResource PrimaryTextColor}"
+                                             DockPanel.Dock="Top"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                        <Button Content="{DynamicResource close}"
+                                Style="{DynamicResource IconButtonsStyle}"
+                                Command="{Binding CloseFilterMenu}" Cursor="Hand"
+                                ToolTip="Закрыть"/>
+
+                        <Button Content="{DynamicResource plus-circle}"
+                                Style="{DynamicResource IconButtonsStyle}"
+                                Command="{Binding AddFilter}" 
+                                ToolTip="Добавить фильтр"/>
                     </StackPanel>
-                </Grid>
-            </Border>
-            <!--Header:End-->
+                    
 
-            <!--LeftMenu-->
-
-            <TabControl Style="{DynamicResource LeftTab}" TabStripPlacement="Left">
-                <TabItem BorderThickness="0" Template="{DynamicResource TabItemTemplate}" >
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="{DynamicResource table-account}" Fill="{DynamicResource PrimaryIconColor}"/>
-                            <Label Content="Таблица студентов" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <!--Start: table of students-->
-                    <!--<ListView ItemsSource="{Binding Students}" SelectedItem="">
-                        <ListView.Style>
-                            <Style TargetType="ListView">
-                                <Setter Property="Background" Value="Transparent"/>
-                            </Style>
-                        </ListView.Style>
-                    </ListView>-->
-
-
-
-                    <ListView Margin="5" Style="{DynamicResource lvStyle}" ItemsSource="{Binding Students}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"/>
-                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <!--<DataGrid Style="{DynamicResource GridStyle}" 
-                              ItemsSource="{Binding Customers}"
-                              AutoGenerateColumns="False"
-                              Background="{DynamicResource PrimaryBackgroundColor}"
-                              Margin="3"
-                              BorderBrush="Transparent"
-                              BorderThickness="0"
-                              VirtualizingStackPanel.IsVirtualizing ="True"
-                              VirtualizingStackPanel.VirtualizationMode ="Recycling"
-                              ScrollViewer.IsDeferredScrollingEnabled ="True"
-                              >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="100"/>
-                            <DataGridTextColumn Header="Фамилия" Binding="{Binding SurName}" Width="100"/>
-                            <DataGridTextColumn Header="Отчество" Binding="{Binding LastName}" Width="100"/>
-                            <DataGridTextColumn Header="Група" Binding="{Binding Group}" Width="50"/>
-                            <DataGridTextColumn Header="ПрофБилет" Binding="{Binding ProfileTicket}" Width="100"/>
-                            <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="100"/>
-                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="100"/>
-                        </DataGrid.Columns>
-                    </DataGrid>-->
-
-
-
-                        <!--<Label>asdasdasd</Label>-->
-                    <!--End: table of students-->
-                </TabItem>
-                <TabItem Template="{DynamicResource TabItemTemplate}">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="{DynamicResource add-user}" Fill="{DynamicResource PrimaryIconColor}"/>
-                            <Label Content="Добавить студента" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <!--Start: Add student-->
-                    <!--End: Add student-->
-                </TabItem>
-            </TabControl>
-            
-            
-        </DockPanel>
-
-
-    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        <i:Interaction.Behaviors>
+            <local:MouseBehaviour MouseX="{Binding PanelX, Mode=OneWayToSource}"
+                                  MouseY="{Binding PanelY, Mode=OneWayToSource}"/>
+        </i:Interaction.Behaviors>
+    </Canvas>
 </Window>

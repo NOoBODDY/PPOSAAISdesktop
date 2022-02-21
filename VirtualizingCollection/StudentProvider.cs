@@ -12,18 +12,17 @@ namespace ClientDB.VirtualizingCollection
 {
     internal class StudentProvider: IItemsProvider<Student>
     {
-        private readonly int _count;
-        private readonly int _fetchDelay;
+        private int _count;
+        APIservice api;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DemoCustomerProvider"/> class.
         /// </summary>
         /// <param name="count">The count.</param>
         /// <param name="fetchDelay">The fetch delay.</param>
-        public StudentProvider(int count, int fetchDelay)
+        public StudentProvider(APIservice API)
         {
-            _count = count;
-            _fetchDelay = fetchDelay;
+            this.api = API;
         }
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace ClientDB.VirtualizingCollection
         public int FetchCount()
         {
             Trace.WriteLine("FetchCount");
-            Thread.Sleep(_fetchDelay);
+            _count = api.GetStudentsCount();
             return _count;
         }
 
@@ -46,15 +45,8 @@ namespace ClientDB.VirtualizingCollection
         public IList<Student> FetchRange(int startIndex, int count)
         {
             Trace.WriteLine("FetchRange: " + startIndex + "," + count);
-            Thread.Sleep(_fetchDelay);
 
-            List<Student> list = new List<Student>();
-            Trace.WriteLine("list init");
-            for (int i = startIndex; i < startIndex + count; i++)
-            {
-                Student student = new Student { firstname = "Student " + (i + 1), ProfileTicket = (i+1).ToString() };
-                list.Add(student);
-            }
+            List<Student> list = api.GetPageOfStudents(startIndex, count + startIndex);
             return list;
         }
 

@@ -19,16 +19,15 @@ namespace ClientDB.ViewModel
 {
     class loginMV : INotifyPropertyChanged
     {
+        #region interface
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
+        #endregion
         string username;
-        string URL;
-        static string loginUrl = "/api/login";
 
         public Action CloseAction { get; set; }
 
@@ -45,10 +44,9 @@ namespace ClientDB.ViewModel
 
         private IUnityContainer container;
 
-        public loginMV( IUnityContainer unityContainer, string url)
+        public loginMV( IUnityContainer unityContainer)
         {
             container = unityContainer;
-            URL = url;
         }
 
         public string Password
@@ -60,8 +58,9 @@ namespace ClientDB.ViewModel
             }
         }
 
+        APIservice api;
 
-
+        #region commands
         private RelayCommand loginCommand;
         public RelayCommand LoginCommand
         {
@@ -70,40 +69,13 @@ namespace ClientDB.ViewModel
                 return loginCommand ??
                     (loginCommand = new RelayCommand(obj =>
                     {
-                        WebRequest webRequest = WebRequest.Create(URL + loginUrl);
-                        webRequest.Method = "POST";
-                        byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("username=" + UserName + "&" + "password=" + Password);
-                        webRequest.ContentType = "application/x-www-form-urlencoded";
-                        webRequest.ContentLength = byteArray.Length;
-                        //записываем данные в поток запроса
-                        using (Stream dataStream = webRequest.GetRequestStream())
+                        api = new APIservice(UserName, Password);
+
+                        if (api.LogIn() == "OK") // 
                         {
-                            dataStream.Write(byteArray, 0, byteArray.Length);
-                        }
-                        WebResponse webResponse = webRequest.GetResponse();
 
-                        string response;
-                        using (Stream stream = webResponse.GetResponseStream())
-                        {
-                            using (StreamReader reader = new StreamReader(stream))
-                            {
-                                response = reader.ReadToEnd();
-                            }
-                        }
-                        webResponse.Close();
-
-                        JObject responceObj = JObject.Parse(response);
-
-                        if ((string)responceObj["status"] == "success")
-                        {
-                            //var handler = new JwtSecurityTokenHandler();
-                            //var jsonToken = handler.ReadToken( (string) responceObj["token"]);
-                            //var tokenS = jsonToken as JwtSecurityToken;
-
-                            //TODO (1)
-
-                            //TablePage page = new TablePage(UserName,(string) responceObj["token"], null, URL);
-                            //page.Show();
+                            MainView main = new MainView(api);
+                            main.Show();
                             CloseAction();
                         }
                         else
@@ -125,6 +97,6 @@ namespace ClientDB.ViewModel
                                     (closeCommand = new RelayCommand(obj => { CloseAction();}));
             }
         }
-
+        #endregion
     }
 }
