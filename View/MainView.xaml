@@ -23,6 +23,7 @@
     </WindowChrome.WindowChrome>
     <Window.Resources>
         <cv:EnumConverter x:Key="EnumConverter"/>
+        <cv:DateConverter x:Key="DateConverter"/>
         <Style TargetType="ToolTip">
             <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundColor}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBorderColor}"/>
@@ -164,7 +165,7 @@
                         <TabItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <Path Data="{DynamicResource table-account}" Fill="{DynamicResource PrimaryIconColor}"/>
-                                <Label Content="Таблица студентов" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
+                                <Label Content="Таблица студентов" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center" Margin="5 0 0 0"/>
                             </StackPanel>
                         </TabItem.Header>
                         <!--Start: table of students-->
@@ -204,11 +205,11 @@
                     
                         <!--End: table of students-->
                     </TabItem>
-                    <TabItem Template="{DynamicResource TabItemTemplate}" IsSelected="{Binding TabActiveEdit }">
+                    <TabItem Template="{DynamicResource TabItemTemplate}" >
                         <TabItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <Path Data="{DynamicResource add-user}" Fill="{DynamicResource PrimaryIconColor}"/>
-                                <Label Content="Добавить студента" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center"/>
+                                <Label Content="Добавить студента" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center" Margin="5 0 0 0"/>
                             </StackPanel>
                         </TabItem.Header>
                         
@@ -262,13 +263,169 @@
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <Label Style="{DynamicResource LabelStyle}" Content="Форма обучения"/>
                                 <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FormOfStudyEnum }}}" 
-                                          SelectedValue="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum}}"
-                                          DockPanel.Dock="Top"/>
+                                          SelectedValue="{Binding NewStudent.Formofstudyenum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum}}"/>
                             </StackPanel>
                             <Button Content="Добавить\отредактировать" Height="30" Width="190" Command="{Binding AddCommand}"/>
                         </StackPanel>
                         <!--End: Add student-->
                     </TabItem>
+                    <TabItem Template="{DynamicResource TabItemTemplate}" IsSelected="{Binding TabActiveEdit, Mode=TwoWay}">
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{DynamicResource student}" Fill="{DynamicResource PrimaryIconColor}"/>
+                                <Label Content="Добавить студента" Foreground="{DynamicResource PrimaryTextColor}" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <!--Start: Edit student-->
+                        <DockPanel LastChildFill="True">
+                            <Border DockPanel.Dock="Bottom" 
+                                    Height="35" 
+                                    BorderBrush="{DynamicResource PrimaryBorderColor}"
+                                    BorderThickness="0 1 0 1"
+                                    CornerRadius="0 0 10 0"
+                                    Background="{DynamicResource PrimaryPanelColor}">
+                                <ToggleButton Style="{DynamicResource IconToggleButtonStyle}"
+                                        HorizontalAlignment="Right"
+                                        Margin="0 0 5 0"
+                                        Command="{Binding EditModeChangeCommand}"
+                                        ToolTip="Редактирование"/>
+                            </Border>
+                            <!--Start: RightPanel-->
+                            <Border DockPanel.Dock="Right" BorderThickness="2 0 0 0" BorderBrush="{DynamicResource PrimaryBackgroundColor}">
+                                <StackPanel Orientation="Vertical">
+                                    <Label Style="{DynamicResource LabelStyle}" 
+                                           Content="Оплата"
+                                           HorizontalAlignment="Center"/>
+                                    <ListBox IsEnabled="{Binding IsEditable}"
+                                            ItemsSource="{Binding SelectedStudent.ticketExtensions}"
+                                            Background="Transparent"
+                                            BorderThickness="0">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border CornerRadius="10" 
+                                                Background="{DynamicResource PrimaryBackgroundColor}"
+                                                BorderThickness="0">
+                                                    <DockPanel LastChildFill="True">
+
+                                                        <CheckBox IsChecked="{Binding payment}"
+                                                                  DockPanel.Dock="Right"
+                                                                  HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"
+                                                                  IsEnabled="{Binding IsEditable, RelativeSource={RelativeSource AncestorType=ListBox, Mode=FindAncestor}}"/>
+                                                        <Label Style="{DynamicResource LabelStyle}" 
+                                                               Content="{Binding semester.title}"
+                                                               DockPanel.Dock="Left"/>
+                                                    </DockPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                                
+                            </Border>
+                            
+
+
+                            <!--End: RightPanel-->
+
+
+
+
+
+
+                            <!--Start: LeftPanel-->
+                            <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Label Content="ФИО" Style="{DynamicResource LabelStyle}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Text="{Binding SelectedStudent.lastname}" 
+                                                 Style="{DynamicResource EditSudentTboxStyle}" 
+                                                 Width="120"
+                                                 Tag="10 0 0 10"
+                                                 Margin="0"
+                                                 IsEnabled="{Binding IsEditable}"/>
+                                        <TextBox Text="{Binding SelectedStudent.firstname}" 
+                                                 Style="{DynamicResource EditSudentTboxStyle}" 
+                                                 Width="120"
+                                                 Tag="0 0 0 0"
+                                                 Margin="0"
+                                                 IsEnabled="{Binding IsEditable}"/>
+                                        <TextBox Text="{Binding SelectedStudent.middlename}" 
+                                                 Style="{DynamicResource EditSudentTboxStyle}" 
+                                                 Width="120"
+                                                 Tag="0 10 10 0"
+                                                 IsEnabled="{Binding IsEditable}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Label Content="Группа" Style="{DynamicResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedStudent.group}" 
+                                             Style="{DynamicResource EditSudentTboxStyle}" 
+                                             Width="120"
+                                             Tag="10"
+                                             Margin="0 0 5 0"
+                                             IsEnabled="{Binding IsEditable}"/>
+                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FormOfStudyEnum }}}" Width="80" 
+                                              Text="{Binding SelectedStudent.Formofstudyenum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum} }"
+                                              IsEnabled="{Binding IsEditable}"
+                                              SelectedValue="{Binding SelectedStudent.Formofstudyenum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum}, Mode=TwoWay}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Label Content="Профбилет №" Style="{DynamicResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedStudent.profileTicketNumber}" 
+                                             Style="{DynamicResource EditSudentTboxStyle}" 
+                                             Width="120"
+                                             Tag="10"
+                                             IsEnabled="{Binding IsEditable}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Label Content="Номер телефона" Style="{DynamicResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedStudent.phone}" 
+                                             Style="{DynamicResource EditSudentTboxStyle}" 
+                                             Width="120"
+                                             Tag="10"
+                                             IsEnabled="{Binding IsEditable}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Label Content="Email" Style="{DynamicResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedStudent.email}" 
+                                             Style="{DynamicResource EditSudentTboxStyle}" 
+                                             Width="120"
+                                             Tag="10"
+                                             IsEnabled="{Binding IsEditable}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Label Content="Адрес " Style="{DynamicResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedStudent.address}" 
+                                             Style="{DynamicResource EditSudentTboxStyle}" 
+                                             Width="120"
+                                             Tag="10"
+                                             IsEnabled="{Binding IsEditable}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Label Content="Статус" Style="{DynamicResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedStudent.status}" 
+                                             Style="{DynamicResource EditSudentTboxStyle}" 
+                                             Width="120"
+                                             Tag="10"
+                                             IsEnabled="{Binding IsEditable}"/>
+                                </StackPanel>
+                                <DatePicker Width="120" 
+                                            HorizontalAlignment="Left" 
+                                            Margin="25 3 3 3"
+                                            IsEnabled="{Binding IsEditable}"
+                                            SelectedDate="{Binding SelectedStudent.dateOfEntry, Converter={StaticResource DateConverter}}"/>
+
+                                <Button Content="Сохранить" Height="30" Width="100" IsEnabled="{Binding IsEditable}"/>
+                            </StackPanel>
+                            <!--End: LeftPanel-->
+                            
+                            
+                        </DockPanel>
+                        <!--End: Edit student-->
+                    </TabItem>
+                    
+                    
                 </TabControl>
             
             

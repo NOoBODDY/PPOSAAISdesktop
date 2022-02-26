@@ -47,10 +47,8 @@ namespace ClientDB.ViewModel
 
         APIservice api;
 
-        Student selectedStudent;
-        public Student SelectedStudent { get { return selectedStudent; } set { selectedStudent = value; OnPropertyChanged("SelectedStudent"); } } 
-
-        #region FilterMenu
+        
+        #region Filter Menu
         bool filterMenuVisibility = false;
         public Visibility FilterMenuVisibility
         {
@@ -124,7 +122,7 @@ namespace ClientDB.ViewModel
 
         #endregion
 
-        #region AddStudent
+        #region Add Student
 
         Student newStudent;
         public Student NewStudent { get { return newStudent; } set { newStudent = value; OnPropertyChanged("NewStudent"); } }
@@ -132,14 +130,17 @@ namespace ClientDB.ViewModel
 
         #endregion
 
+
+
+        #region Edit Student
         bool tabActiveEdit;
         public bool TabActiveEdit { get { return tabActiveEdit; } set { tabActiveEdit = value; OnPropertyChanged("TabActiveEdit"); } }
+        Student selectedStudent;
+        public Student SelectedStudent { get { return selectedStudent; } set { selectedStudent = value; OnPropertyChanged("SelectedStudent"); } }
+        bool isEditable;
+        public bool IsEditable { get { return isEditable; } set { isEditable = value; OnPropertyChanged("IsEditable"); } }
 
-
-
-
-
-
+        #endregion
         #endregion
 
         #region Constructor
@@ -153,7 +154,7 @@ namespace ClientDB.ViewModel
             FilterMenuHeight = 100;
             Filters = new ObservableCollection<Filter>();
             NewStudent = new Student();
-
+            IsEditable = false;
         }
         #endregion
 
@@ -228,16 +229,12 @@ namespace ClientDB.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand(obj =>
                   {
-                      Task task = new Task(() =>
-                        {
-                             api.AddStudent(NewStudent);
-                             NewStudent = new Student();
-                             lock(students)
-                             {
-                                 StudentProvider provider = new StudentProvider(api);
-                                 Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
-                             }
-                        });
+                    api.AddStudent(NewStudent);
+                    NewStudent = new Student();
+                            
+                    StudentProvider provider = new StudentProvider(api);
+                    Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
+                             
                       
                   }));
             }
@@ -256,12 +253,24 @@ namespace ClientDB.ViewModel
                 return editCommand ??
                     (editCommand = new RelayCommand(obj =>
                     {
-                        NewStudent = SelectedStudent;
                         TabActiveEdit = true;
                     }));
             }
         }
-        
+
+        RelayCommand editModeChangeCommand;
+        public RelayCommand EditModeChangeCommand
+        {
+            get
+            {
+                return editModeChangeCommand ??
+                    (editModeChangeCommand = new RelayCommand(obj =>
+                    {
+                        IsEditable = !IsEditable;
+                    }));
+            }
+        }
+
         #endregion
     }
 }

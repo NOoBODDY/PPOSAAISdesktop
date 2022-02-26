@@ -237,7 +237,7 @@
                             BorderThickness="1" CornerRadius="10">
                         <Grid>
                             <TextBox x:Name="box" 
-                                     Text="{TemplateBinding Text}"
+                                     Text="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox, Mode=FindAncestor}}"
                                      VerticalContentAlignment="Center"
                                      VerticalAlignment="Center"
                                      Background="Transparent" 
@@ -275,4 +275,65 @@
         </Setter> 
     </Style>
     <!--End: TextBoxStyle-->
+
+    <!--Start: EditSudentTboxStyle-->
+    <Style x:Key="EditSudentTboxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource PrimaryPanelColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextColor}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="0" CornerRadius="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=TextBox,Mode=FindAncestor}}">
+                        <TextBox x:Name="box" 
+                                 Text="{Binding Text, RelativeSource={RelativeSource AncestorType=TextBox, Mode=FindAncestor}}"
+                                 VerticalContentAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 HorizontalContentAlignment="Center"
+                                 Background="Transparent" 
+                                 Foreground="{TemplateBinding Foreground}" 
+                                 CaretBrush="{DynamicResource PrimaryTextColor}"
+                                 BorderThickness="0"
+                                 Margin="1"/>
+
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--End: EditSudentTboxStyle-->
+
+    <!-- Start: IconToggleButtonStyle -->
+    <Style x:Key="IconToggleButtonStyle" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border Name="bd" CornerRadius="5" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <Path Name="ico" Data="{DynamicResource pencil-off}" Fill="{DynamicResource PrimaryIconColor}" Height="10" Width="10" Stretch="Uniform"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundColor}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="ico" Property="Data" Value="{DynamicResource pencil}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="ico" Property="Fill" Value="{DynamicResource PrimaryBackgroundColor}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- End: IconToggleButtonStyle -->
+
+
+
 </ResourceDictionary>

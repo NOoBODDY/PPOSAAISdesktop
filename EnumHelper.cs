@@ -27,7 +27,7 @@ namespace ClientDB
         {
             foreach (Enum one in Enum.GetValues(type))
             {
-                if (description == GetDescription(one))
+                if (description == Enum.GetName(type, one))
                     return one;
             }
             return default;

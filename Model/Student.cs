@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
@@ -8,51 +9,21 @@ namespace ClientDB.Model
 {
     public class Student : INotifyPropertyChanged
     {
+        #region Interface
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+        #endregion
 
-        string Firstname;
-        string Middlename;
-        string Lastname;
-        string Group;
-        string faculty;
-        string ProfileTicketNumber;
-        string FormOfStudy;
-        string DateOfEntry;
-        FormOfStudyEnum formofstudyenum;
+        #region Properties
 
-        public FormOfStudyEnum Formofstudyenum
-        {
-            get { return formofstudyenum;}
-            set { formofstudyenum = value; OnPropertyChanged("Formofstudyenum"); }
-        }
-
-        [JsonIgnore]
         public int id;
-        string Phone;
-        [JsonIgnore]
-        public object email { get; set; }
-        
-        [JsonIgnore]
-        public object address { get; set; }
-        [JsonIgnore]
-        public string status { get; set; }
-        [JsonIgnore]
-        public object dateOfLeaving { get; set; }
-        [JsonIgnore]
-        public object[] materialAidList { get; set; }
-        [JsonIgnore]
-        public Ticketextension[] ticketExtensions { get; set; }
-        [JsonIgnore]
-        public object[] rolesInGroup { get; set; }
-        [JsonIgnore]
-        public object[] rolesInPPOSA { get; set; }
-        [JsonIgnore]
-        public object[] documents { get; set; }
+
+        #region name
+        string Firstname;
         public string firstname
         {
             get { return Firstname; }
@@ -63,16 +34,7 @@ namespace ClientDB.Model
             }
         }
 
-        public string lastname
-        {
-            get { return Lastname; }
-            set
-            {
-                Lastname = value;
-                OnPropertyChanged("lastname");
-            }
-        }
-
+        string Middlename;
         public string middlename
         {
             get { return Middlename; }
@@ -83,6 +45,19 @@ namespace ClientDB.Model
             }
         }
 
+        string Lastname;
+        public string lastname
+        {
+            get { return Lastname; }
+            set
+            {
+                Lastname = value;
+                OnPropertyChanged("lastname");
+            }
+        }
+        #endregion
+
+        string Group;
         public string group
         {
             get { return Group; }
@@ -92,6 +67,8 @@ namespace ClientDB.Model
                 OnPropertyChanged("group");
             }
         }
+
+        string faculty;
         [JsonIgnore]
         public string Faculty
         {
@@ -102,6 +79,8 @@ namespace ClientDB.Model
                 OnPropertyChanged("Faculty");
             }
         }
+
+        string ProfileTicketNumber;
         public string profileTicketNumber
         {
             get { return ProfileTicketNumber; }
@@ -111,16 +90,29 @@ namespace ClientDB.Model
                 OnPropertyChanged("profileTicketNumber");
             }
         }
-
+        #region FormOfStudy
+        FormOfStudyEnum formofstudyenum;
+        [JsonIgnore]
+        public FormOfStudyEnum Formofstudyenum
+        {
+            get { return formofstudyenum; }
+            set { formofstudyenum = value; OnPropertyChanged("Formofstudyenum"); }
+        }
         public string formOfStudy
         {
-            get { return GetDescription(formofstudyenum); }
+            get { return Enum.GetName(typeof(FormOfStudyEnum), formofstudyenum); }
             set
             {
-                FormOfStudy = value;
-                OnPropertyChanged("formOfStudy");
+                if (value != null)
+                {
+                    Formofstudyenum = (FormOfStudyEnum)EnumHelper.GetEnum(value, typeof(FormOfStudyEnum));
+                    OnPropertyChanged("formOfStudy");
+                }
             }
         }
+        #endregion
+
+        string DateOfEntry;
         public string dateOfEntry
         {
             get { return DateOfEntry; }
@@ -131,53 +123,83 @@ namespace ClientDB.Model
             }
 
         }
-        
+
+        string Phone;
         public string phone
         {
-            get { return Phone; } 
+            get { return Phone; }
             set
             {
                 Phone = value;
                 OnPropertyChanged("phone");
             }
         }
-       
+
+        string Email;
+        public string email { get { return Email; } set { Email = value; OnPropertyChanged("email"); } }
+
+        string Address;
+        public string address { get { return Address; } set { Address = value; OnPropertyChanged("address"); } }
+
+        string Status;
+        public string status { get { return Status; } set { Status = value; OnPropertyChanged("status"); } }
+
+        string DateOfLeaving;
+        public string dateOfLeaving { get { return DateOfLeaving; } set { DateOfLeaving = value; OnPropertyChanged("dateOfLeaving"); } }
+
+        ObservableCollection<Ticketextension> TicketExtensions;
+        public ObservableCollection<Ticketextension> ticketExtensions { get { return TicketExtensions; } set { TicketExtensions = value; OnPropertyChanged("ticketExtensions"); } }
+
+        #endregion
 
 
 
-        public Student()
-        {
 
-        }
 
-        static string GetDescription(Enum enumElement)
-        {
-            Type type = enumElement.GetType();
-
-            MemberInfo[] memInfo = type.GetMember(enumElement.ToString());
-            if (memInfo != null && memInfo.Length > 0)
-            {
-                object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-                if (attrs != null && attrs.Length > 0)
-                    return ((DescriptionAttribute)attrs[0]).Description;
-            }
-
-            return enumElement.ToString();
-        }
-
+        [JsonIgnore]
+        public object[] materialAidList { get; set; }
+        [JsonIgnore]
+        public object[] rolesInGroup { get; set; }
+        [JsonIgnore]
+        public object[] rolesInPPOSA { get; set; }
+        [JsonIgnore]
+        public object[] documents { get; set; }
+        
     }
 
     public class Ticketextension
     {
+        #region Interface
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+        #endregion
         public int id { get; set; }
-        public Semester semester { get; set; }
-        public bool payment { get; set; }
+
+
+        Semester Semester;
+        public Semester semester { get { return Semester; } set { Semester = value; OnPropertyChanged("semester"); } }
+        bool Payment;
+        public bool payment { get { return Payment; } set { Payment = value; OnPropertyChanged("payment"); } }
     }
 
     public class Semester
     {
+        #region Interface
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+        #endregion
         public int id { get; set; }
-        public string title { get; set; }
+
+        string Title;
+        public string title { get { return Title; } set { Title = value; OnPropertyChanged("title"); } }
     }
 
 
