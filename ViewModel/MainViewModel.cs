@@ -176,8 +176,8 @@ namespace ClientDB.ViewModel
 
             Students = DataVirtualizingCollectionBuilder.Build<Student>(notificationScheduler).Preloading(placeholderFactory).LeastRecentlyUsed(3).TaskBasedFetchers(TaskpageFetcher, TaskcountFetcher).AsyncIndexAccess(placeholderFactory);
 
-            FilterMenuWidth = 300;
-            FilterMenuHeight = 100;
+            FilterMenuWidth = 335;
+            FilterMenuHeight = 350;
             Filters = new ObservableCollection<Filter>();
             NewStudent = new Student();
             IsEditable = false;

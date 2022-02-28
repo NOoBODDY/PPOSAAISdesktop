@@ -141,14 +141,40 @@ namespace ClientDB.Model
         string Address;
         public string address { get { return Address; } set { Address = value; OnPropertyChanged("address"); } }
 
-        string Status;
-        public string status { get { return Status; } set { Status = value; OnPropertyChanged("status"); } }
+        #region Status
 
+        public string status 
+        { 
+            get { return Enum.GetName(typeof(StudentStatusEnum), StatusEnum); } 
+            set 
+            {
+                if (value != null)
+                {
+                    StatusEnum = (StudentStatusEnum)EnumHelper.GetEnum(value, typeof(StudentStatusEnum));
+                    OnPropertyChanged("status");
+                }
+            } 
+        }
+
+        
+        StudentStatusEnum statusEnum;
+        [JsonIgnore]
+        public StudentStatusEnum StatusEnum
+        {
+            get { return statusEnum; }
+            set
+            {
+                statusEnum = value;
+                OnPropertyChanged("StatusEnum");
+            }
+        }
+
+        #endregion
         string DateOfLeaving;
         public string dateOfLeaving { get { return DateOfLeaving; } set { DateOfLeaving = value; OnPropertyChanged("dateOfLeaving"); } }
 
         ObservableCollection<Ticketextension> TicketExtensions;
-        [JsonIgnore]
+        
         public ObservableCollection<Ticketextension> ticketExtensions { get { return TicketExtensions; } set { TicketExtensions = value; OnPropertyChanged("ticketExtensions"); } }
 
         #endregion
@@ -205,14 +231,12 @@ namespace ClientDB.Model
 
     public class PaymentSemester
     {
-        public int id { get; set; }
         public string semesterTitle { get; set; }
         public int? studentId { get; set; }
 
         static public PaymentSemester FromSemester(Semester semester)
         {
             PaymentSemester payment = new PaymentSemester();
-            payment.id = semester.id;
             payment.semesterTitle = semester.title;
             return payment;
         }

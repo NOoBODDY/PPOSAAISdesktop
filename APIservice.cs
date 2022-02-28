@@ -202,7 +202,7 @@ namespace ClientDB
                 }
             }
         }
-
+        //for many
         public void AddPayment (Student[] students)
         {
             try
@@ -235,6 +235,40 @@ namespace ClientDB
                 ExeptionNotify?.Invoke(ex.Message);
             }
         }
+        //for one
+        public void AddPayment(Student student)
+        {
+            try
+            {
+                string url = "/api/student/addPayment";
+                List<PaymentSemester> payments = new List<PaymentSemester>();
+
+                foreach (Ticketextension ticketextension in student.ticketExtensions)
+                {
+                    PaymentSemester payment = new PaymentSemester();
+                    payment = PaymentSemester.FromSemester(ticketextension.semester);
+                    payment.studentId = student.id;
+                    payments.Add(payment);
+                }
+                string payload = JArray.FromObject(payments).ToString();
+
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(baseURL + url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Headers.Add("Authorization", access_token);
+                request.GetRequestStream().Write(Encoding.UTF8.GetBytes(payload), 0, payload.Length);
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                ExeptionNotify?.Invoke(ex.Message);
+            }
+        }
+
+
+
+
 
         public void AddUser(Account newUser)
         {
@@ -289,6 +323,11 @@ namespace ClientDB
                 }
             }
         }
+
+
+
+
+
         #endregion
 
     }

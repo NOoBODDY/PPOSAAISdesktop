@@ -297,14 +297,14 @@
                                            Content="Оплата"
                                            HorizontalAlignment="Center"/>
                                     <ListBox IsEnabled="{Binding IsEditable}"
-                                            ItemsSource="{Binding SelectedStudent.ticketExtensions}"
-                                            Background="Transparent"
-                                            BorderThickness="0">
+                                             ItemsSource="{Binding SelectedStudent.ticketExtensions}"
+                                             Background="Transparent"
+                                             BorderThickness="0">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Border CornerRadius="10" 
-                                                Background="{DynamicResource PrimaryBackgroundColor}"
-                                                BorderThickness="0">
+                                                        Background="{DynamicResource PrimaryBackgroundColor}"
+                                                        BorderThickness="0">
                                                     <DockPanel LastChildFill="True">
 
                                                         <CheckBox IsChecked="{Binding payment}"
@@ -365,10 +365,9 @@
                                              Tag="10"
                                              Margin="0 0 5 0"
                                              IsEnabled="{Binding IsEditable}"/>
-                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FormOfStudyEnum }}}" Width="80" 
-                                              Text="{Binding SelectedStudent.Formofstudyenum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum} }"
+                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FormOfStudyEnum }}}" Width="80"
                                               IsEnabled="{Binding IsEditable}"
-                                              SelectedValue="{Binding SelectedStudent.Formofstudyenum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum}, Mode=TwoWay}"/>
+                                              SelectedValue="{Binding SelectedStudent.Formofstudyenum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FormOfStudyEnum}}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="3">
                                     <Label Content="Профбилет №" Style="{DynamicResource LabelStyle}"/>
@@ -404,11 +403,9 @@
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="3">
                                     <Label Content="Статус" Style="{DynamicResource LabelStyle}"/>
-                                    <TextBox Text="{Binding SelectedStudent.status}" 
-                                             Style="{DynamicResource EditSudentTboxStyle}" 
-                                             Width="120"
-                                             Tag="10"
-                                             IsEnabled="{Binding IsEditable}"/>
+                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:StudentStatusEnum }}}" Width="80"
+                                              IsEnabled="{Binding IsEditable}"
+                                              SelectedValue="{Binding SelectedStudent.StatusEnum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:StudentStatusEnum}}"/>
                                 </StackPanel>
                                 <DatePicker Width="120" 
                                             HorizontalAlignment="Left" 
@@ -416,7 +413,7 @@
                                             IsEnabled="{Binding IsEditable}"
                                             SelectedDate="{Binding SelectedStudent.dateOfEntry, Converter={StaticResource DateConverter}}"/>
 
-                                <Button Content="Сохранить" Height="30" Width="100" IsEnabled="{Binding IsEditable}"/>
+                                <Button Content="Сохранить" Height="30" Width="100" IsEnabled="{Binding IsEditable}" Command="{Binding SaveStudent}"/>
                             </StackPanel>
                             <!--End: LeftPanel-->
                             
@@ -443,43 +440,12 @@
                 FocusManager.IsFocusScope="True"
                 Canvas.Left="{Binding FilterMenuX}"
                 Canvas.Top="{Binding FilterMenuY}">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="5 5 0 5">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
-                    <ListBox x:Name="FiltersBox" ItemsSource="{Binding Filters}"
-                             SelectedItem="{Binding SelectedFilter}"
-                             Background="Transparent"
-                             HorizontalAlignment="Left"
-                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                             BorderBrush="{DynamicResource SecondaryBorderColor}"
-                             BorderThickness="0">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <DockPanel Background="Transparent" Margin="0 3 0 0" VerticalAlignment="Top">
-                                    <Button Style="{DynamicResource IconButtonsStyle}"
-                                            Content="{DynamicResource delete}"
-                                            Command="{Binding ElementName=Home , Path=DataContext.DeleteFilter}"
-                                            CommandParameter="{Binding }"
-                                            DockPanel.Dock="Top"
-                                            ToolTip="Удалить"/>
-                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FilterType }}}" 
-                                              SelectedValue="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FilterType}}"
-                                              DockPanel.Dock="Top"/>
-                                    <TextBox Text="{Binding FilterValue}" 
-                                             Background="{DynamicResource PrimaryBackgroundColor}" 
-                                             TextWrapping="Wrap" 
-                                             Foreground="{DynamicResource PrimaryTextColor}"
-                                             DockPanel.Dock="Top"/>
-                                </DockPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="5 5 0 5">
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Right" LastChildFill="True">
+                    <StackPanel Orientation="Vertical" 
+                                HorizontalAlignment="Right" 
+                                VerticalAlignment="Top" 
+                                DockPanel.Dock="Right">
                         <Button Content="{DynamicResource close}"
                                 Style="{DynamicResource IconButtonsStyle}"
                                 Command="{Binding CloseFilterMenu}" Cursor="Hand"
@@ -488,11 +454,52 @@
                         <Button Content="{DynamicResource plus-circle}"
                                 Style="{DynamicResource IconButtonsStyle}"
                                 Command="{Binding AddFilter}" 
-                                ToolTip="Добавить фильтр"/>
+                                ToolTip="Добавить фильтр" Cursor="Hand"/>
                     </StackPanel>
-                    
-
-                </StackPanel>
+                    <ListBox x:Name="FiltersBox" ItemsSource="{Binding Filters}"
+                             SelectedItem="{Binding SelectedFilter}"
+                             Background="Transparent"
+                             HorizontalAlignment="Left"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             BorderBrush="{DynamicResource SecondaryBorderColor}"
+                             BorderThickness="0"
+                             DockPanel.Dock="Left">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Background="Transparent" 
+                                           Margin="0 3 0 0" 
+                                           VerticalAlignment="Top" 
+                                           HorizontalAlignment="Left"
+                                           LastChildFill="True">
+                                    <Button Style="{DynamicResource IconButtonsStyle}"
+                                            Content="{DynamicResource delete}"
+                                            Command="{Binding ElementName=Home , Path=DataContext.DeleteFilter}"
+                                            CommandParameter="{Binding }"
+                                            DockPanel.Dock="Left"
+                                            ToolTip="Удалить"/>
+                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FilterType }}}" 
+                                              SelectedValue="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FilterType}}"
+                                              DockPanel.Dock="Left"/>
+                                    <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:FilterOperations }}}" 
+                                              SelectedValue="{Binding FilterOperations, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:FilterOperations}}"
+                                              DockPanel.Dock="Left"/>
+                                    <TextBox Text="{Binding FilterValue}" 
+                                             Width="Auto"
+                                             MinWidth="100"
+                                             Background="{DynamicResource PrimaryBackgroundColor}" 
+                                             TextWrapping="Wrap" 
+                                             Foreground="{DynamicResource PrimaryTextColor}"
+                                             DockPanel.Dock="Right"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
             </ScrollViewer>
         </Border>
         <i:Interaction.Behaviors>

@@ -144,6 +144,7 @@
     <Compile Include="Model\Filter.cs" />
     <Compile Include="Model\FormOfStudyEnum.cs" />
     <Compile Include="Model\Student.cs" />
+    <Compile Include="Model\StudentStatusEnum.cs" />
     <Compile Include="MouseBehaviour.cs" />
     <Compile Include="ViewModel\loginMV.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

@@ -23,8 +23,17 @@ namespace ClientDB.Model
      
         [JsonProperty("key")]
         public string TypeValue { get { return Enum.GetName(typeof(FilterType), Type); } }
+
         [JsonProperty("operation")]
-        public static string operation = ":"; 
+        public string operation { get { return EnumHelper.GetDescription(this.FilterOperations); } }
+
+        FilterOperations filterOperations;
+        [JsonIgnore]
+        public FilterOperations FilterOperations 
+        { 
+            get { return filterOperations; } 
+            set { filterOperations = value; OnPropertyChanged("FilterOperations"); } 
+        }
 
         string value;
         [JsonProperty ("value")]
@@ -50,4 +59,15 @@ namespace ClientDB.Model
         [Description("Дата вступления")]
         dateOfEntry
     }
+
+    public enum FilterOperations
+    {
+        [Description(">")]
+        more,
+        [Description("<")]
+        less,
+        [Description(":")]
+        equal
+    }
+
 }
