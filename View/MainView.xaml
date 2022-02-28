@@ -404,7 +404,7 @@
                                 <StackPanel Orientation="Horizontal" Margin="3">
                                     <Label Content="Статус" Style="{DynamicResource LabelStyle}"/>
                                     <ComboBox ItemsSource="{Binding Source={cv:EnumToItemsSource {x:Type m:StudentStatusEnum }}}" Width="80"
-                                              IsEnabled="{Binding IsEditable}"
+                                              IsEnabled="{Binding IsEditable}" 
                                               SelectedValue="{Binding SelectedStudent.StatusEnum, Converter={StaticResource EnumConverter}, ConverterParameter={x:Type m:StudentStatusEnum}}"/>
                                 </StackPanel>
                                 <DatePicker Width="120" 
