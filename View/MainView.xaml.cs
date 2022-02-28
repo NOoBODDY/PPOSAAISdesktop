@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,7 @@ namespace ClientDB.View
         {
             InitializeComponent();
             DataContext = new MainViewModel(api);
+            
         }
 
 
@@ -80,6 +82,14 @@ namespace ClientDB.View
         private void DragAndMove(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //DependencyProperty dependencyProperty = new DependencyProperty();
+            DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromName("ItemsSource", list.GetType(), list.GetType());
+
+            list.InvalidateProperty(descriptor.DependencyProperty);
         }
     }
 }

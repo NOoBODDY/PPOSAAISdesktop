@@ -9,6 +9,7 @@ using System.Net;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Media.Imaging;
 using System.Windows;
 
@@ -147,6 +148,7 @@ namespace ClientDB.ViewModel
         public MainViewModel(APIservice API)
         {
             api = API;
+            api.ExeptionNotify += ThrowMessage;
             Authorised = api.GetAccount();
             StudentProvider provider = new StudentProvider(api);
             Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
@@ -156,6 +158,15 @@ namespace ClientDB.ViewModel
             NewStudent = new Student();
             IsEditable = false;
         }
+        #endregion
+
+        #region Notify Message
+
+        void ThrowMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
+
         #endregion
 
 
@@ -229,13 +240,13 @@ namespace ClientDB.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand(obj =>
                   {
-                    api.AddStudent(NewStudent);
-                    NewStudent = new Student();
-                            
-                    StudentProvider provider = new StudentProvider(api);
-                    Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
-                             
-                      
+                        NewStudent.id = null;
+                        api.AddStudent(NewStudent);
+                        NewStudent = new Student();
+                      Students.LoadPage(1);
+                      int count = Students.Count();
+                      Student st = Students[count - 1];
+                      Students.FireCollectionReset();
                   }));
             }
         }
@@ -267,6 +278,19 @@ namespace ClientDB.ViewModel
                     (editModeChangeCommand = new RelayCommand(obj =>
                     {
                         IsEditable = !IsEditable;
+                    }));
+            }
+        }
+
+        RelayCommand saveStudent;
+        public RelayCommand SaveStudent
+        {
+            get
+            {
+                return saveStudent ??
+                    (saveStudent = new RelayCommand(obj =>
+                    {
+                        api.UpdateStudent(SelectedStudent);
                     }));
             }
         }

@@ -160,7 +160,7 @@
 
                 <!--LeftMenu-->
 
-                <TabControl Style="{DynamicResource LeftTab}" TabStripPlacement="Left">
+                <TabControl Style="{DynamicResource LeftTab}" TabStripPlacement="Left" SelectionChanged="TabControl_SelectionChanged">
                     <TabItem BorderThickness="0" Template="{DynamicResource TabItemTemplate}">
                         <TabItem.Header>
                             <StackPanel Orientation="Horizontal">
@@ -183,7 +183,7 @@
                                         Command="{Binding OpenFilterMenu}"
                                         ToolTip="Фильтры"/>
                             </Border>
-                            <ListView Margin="0" Style="{DynamicResource lvStyle}" ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
+                            <ListView x:Name="list" Margin="0" Style="{DynamicResource lvStyle}" ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding lastname}" Width="100"/>

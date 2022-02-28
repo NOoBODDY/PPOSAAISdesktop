@@ -20,7 +20,7 @@ namespace ClientDB.Model
 
         #region Properties
 
-        public int id;
+        public int? id;
 
         #region name
         string Firstname;
@@ -148,6 +148,7 @@ namespace ClientDB.Model
         public string dateOfLeaving { get { return DateOfLeaving; } set { DateOfLeaving = value; OnPropertyChanged("dateOfLeaving"); } }
 
         ObservableCollection<Ticketextension> TicketExtensions;
+        [JsonIgnore]
         public ObservableCollection<Ticketextension> ticketExtensions { get { return TicketExtensions; } set { TicketExtensions = value; OnPropertyChanged("ticketExtensions"); } }
 
         #endregion
@@ -200,6 +201,21 @@ namespace ClientDB.Model
 
         string Title;
         public string title { get { return Title; } set { Title = value; OnPropertyChanged("title"); } }
+    }
+
+    public class PaymentSemester
+    {
+        public int id { get; set; }
+        public string semesterTitle { get; set; }
+        public int? studentId { get; set; }
+
+        static public PaymentSemester FromSemester(Semester semester)
+        {
+            PaymentSemester payment = new PaymentSemester();
+            payment.id = semester.id;
+            payment.semesterTitle = semester.title;
+            return payment;
+        }
     }
 
 
