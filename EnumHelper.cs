@@ -23,7 +23,16 @@ namespace ClientDB
             return enumElement.ToString();
         }
 
-        public static Enum GetEnum(string description , Type type) 
+        public static Enum GetEnumFromDecription(string description , Type type) 
+        {
+            foreach (Enum one in Enum.GetValues(type))
+            {
+                if (description == EnumHelper.GetDescription(one))
+                    return one;
+            }
+            return default;
+        }
+        public static Enum GetEnum(string description, Type type)
         {
             foreach (Enum one in Enum.GetValues(type))
             {

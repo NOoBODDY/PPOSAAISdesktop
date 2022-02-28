@@ -13,10 +13,10 @@ namespace ClientDB.Converters
             object parameter, CultureInfo culture)
         {
             if (value == null) return "";
-            foreach (FilterType one in Enum.GetValues(parameter as Type))
+            foreach (var one in Enum.GetValues(parameter as Type))
             {
                 if (value.Equals(one))
-                    return EnumHelper.GetDescription(one);
+                    return EnumHelper.GetDescription((Enum)one);
             }
             return "";
         }
@@ -25,7 +25,7 @@ namespace ClientDB.Converters
             object parameter, CultureInfo culture)
         {
             Type type = parameter as Type;
-            return EnumHelper.GetEnum((string)value, type );
+            return EnumHelper.GetEnumFromDecription((string)value, type );
         }
    
     }
