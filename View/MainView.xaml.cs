@@ -83,13 +83,5 @@ namespace ClientDB.View
         {
             this.DragMove();
         }
-
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //DependencyProperty dependencyProperty = new DependencyProperty();
-            DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromName("ItemsSource", list.GetType(), list.GetType());
-
-            list.InvalidateProperty(descriptor.DependencyProperty);
-        }
     }
 }

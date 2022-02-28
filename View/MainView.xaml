@@ -160,7 +160,7 @@
 
                 <!--LeftMenu-->
 
-                <TabControl Style="{DynamicResource LeftTab}" TabStripPlacement="Left" SelectionChanged="TabControl_SelectionChanged">
+                <TabControl Style="{DynamicResource LeftTab}" TabStripPlacement="Left">
                     <TabItem BorderThickness="0" Template="{DynamicResource TabItemTemplate}">
                         <TabItem.Header>
                             <StackPanel Orientation="Horizontal">

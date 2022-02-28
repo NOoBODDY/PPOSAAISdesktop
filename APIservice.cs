@@ -98,6 +98,7 @@ namespace ClientDB
                 string Url = "/api/student/amount";
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(baseURL + Url);
                 request.Method = "PATCH";
+                request.ContentType = "application/json";
                 request.Headers.Add("Authorization", access_token);
                 if (Filters.Count() != 0)
                 {
@@ -126,7 +127,7 @@ namespace ClientDB
             }
         }
 
-        public List<Student> GetPageOfStudents(int startIndex, int endIndex)
+        public Student[] GetPageOfStudents(int startIndex, int endIndex)
         {
             try
             {
@@ -154,7 +155,7 @@ namespace ClientDB
                 }
                 List<Student> students = JsonConvert.DeserializeObject<List<Student>>(responseJson);
                 response.Close();
-                return students;
+                return students.ToArray();
             }
             catch (Exception ex)
             {

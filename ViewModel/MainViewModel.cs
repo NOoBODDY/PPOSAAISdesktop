@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using ClientDB.Model;
 using ClientDB.View;
-using ClientDB.VirtualizingCollection;
 using System.Net;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -12,6 +11,10 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using BFF.DataVirtualizingCollection.DataVirtualizingCollection;
+using System.Collections.Generic;
+using System.Reactive.Concurrency;
+using System.Windows.Threading;
 
 namespace ClientDB.ViewModel
 {
@@ -39,8 +42,8 @@ namespace ClientDB.ViewModel
             }
         }
 
-        AsyncVirtualizingCollection<Student> students;
-        public AsyncVirtualizingCollection<Student> Students 
+        IDataVirtualizingCollection<Student> students;
+        public IDataVirtualizingCollection<Student> Students 
         {
             get { return students; }
             set { students = value; OnPropertyChanged("Students"); }
@@ -150,8 +153,29 @@ namespace ClientDB.ViewModel
             api = API;
             api.ExeptionNotify += ThrowMessage;
             Authorised = api.GetAccount();
-            StudentProvider provider = new StudentProvider(api);
-            Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
+            //StudentProvider provider = new StudentProvider(api);
+            //Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
+
+            Func<int, int, CancellationToken, Student[]> pageFetcher = (offset, pageSize, _) =>
+            api.GetPageOfStudents(offset, offset + pageSize);
+
+            Func<CancellationToken, int> countFetcher = _ =>
+                api.GetStudentsCount();
+
+            Func<int, int, CancellationToken, Task<Student[]>> TaskpageFetcher = (offset, pageSize, _) =>
+                Task.Run<Student[]>(()=>api.GetPageOfStudents(offset, offset + pageSize));
+            Func<CancellationToken, Task<int>> TaskcountFetcher = _ =>
+                Task.Run<int>(()=> api.GetStudentsCount());
+            Func<int, int, Student> placeholderFactory = (page, items) =>
+                new Student();
+
+            var notificationScheduler =
+            new SynchronizationContextScheduler(
+                new DispatcherSynchronizationContext(
+                    Application.Current.Dispatcher));
+
+            Students = DataVirtualizingCollectionBuilder.Build<Student>(notificationScheduler).Preloading(placeholderFactory).LeastRecentlyUsed(3).TaskBasedFetchers(TaskpageFetcher, TaskcountFetcher).AsyncIndexAccess(placeholderFactory);
+
             FilterMenuWidth = 300;
             FilterMenuHeight = 100;
             Filters = new ObservableCollection<Filter>();
@@ -199,6 +223,7 @@ namespace ClientDB.ViewModel
                   {
                       FilterMenuVisibility = Visibility.Collapsed;
                       api.Filters = Filters.ToList();
+                      Students.Reset();
                   }));
             }
         }
@@ -243,10 +268,7 @@ namespace ClientDB.ViewModel
                         NewStudent.id = null;
                         api.AddStudent(NewStudent);
                         NewStudent = new Student();
-                      Students.LoadPage(1);
-                      int count = Students.Count();
-                      Student st = Students[count - 1];
-                      Students.FireCollectionReset();
+                        Students.Reset();
                   }));
             }
         }

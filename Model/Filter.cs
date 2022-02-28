@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
@@ -19,12 +20,14 @@ namespace ClientDB.Model
         FilterType type;
         [JsonIgnore]
         public FilterType Type { get { return type; } set { type = value; OnPropertyChanged("Type"); } }
-        public string key;
-        [JsonIgnore]
-        public string TypeValue { get { return key; } set { key = value; OnPropertyChanged("TypeValue"); } }
+     
+        [JsonProperty("key")]
+        public string TypeValue { get { return Enum.GetName(typeof(FilterType), Type); } }
+        [JsonProperty("operation")]
+        public static string operation = ":"; 
 
-        public string value;
-        [JsonIgnore]
+        string value;
+        [JsonProperty ("value")]
         public string FilterValue { get { return this.value; } set { this.value = value; OnPropertyChanged("FilterValue"); } }
         #endregion
     }
