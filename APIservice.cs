@@ -20,7 +20,8 @@ namespace ClientDB
         #endregion
 
 
-
+        //192.168.43.118
+        //80.87.192.94:8080
         static string baseURL = "http://80.87.192.94:8080";
         string username;
         string password;
@@ -301,8 +302,10 @@ namespace ClientDB
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(baseURL + url);
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Headers.Add("Authorization", access_token);
+
+            //request.Headers.Add("Authorization", access_token);
             request.GetRequestStream().Write(Encoding.UTF8.GetBytes(payload), 0, payload.Length);
+            
             HttpWebResponse response = null;
             try
             {

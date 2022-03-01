@@ -20,10 +20,16 @@ namespace ClientDB.Model
 
         #region Properties
 
+        ObservableCollection<Ticketextension> TicketExtensions;
+
+        public ObservableCollection<Ticketextension> ticketExtensions { get { return TicketExtensions; } set { TicketExtensions = value; OnPropertyChanged("ticketExtensions"); } }
+
+        [JsonProperty]
         public int? id;
 
         #region name
         string Firstname;
+        [JsonProperty]
         public string firstname
         {
             get { return Firstname; }
@@ -35,6 +41,7 @@ namespace ClientDB.Model
         }
 
         string Middlename;
+        [JsonProperty]
         public string middlename
         {
             get { return Middlename; }
@@ -46,6 +53,7 @@ namespace ClientDB.Model
         }
 
         string Lastname;
+        [JsonProperty]
         public string lastname
         {
             get { return Lastname; }
@@ -58,6 +66,7 @@ namespace ClientDB.Model
         #endregion
 
         string Group;
+        [JsonProperty]
         public string group
         {
             get { return Group; }
@@ -81,6 +90,7 @@ namespace ClientDB.Model
         }
 
         string ProfileTicketNumber;
+        [JsonProperty]
         public string profileTicketNumber
         {
             get { return ProfileTicketNumber; }
@@ -98,6 +108,7 @@ namespace ClientDB.Model
             get { return formofstudyenum; }
             set { formofstudyenum = value; OnPropertyChanged("Formofstudyenum"); }
         }
+        [JsonProperty]
         public string formOfStudy
         {
             get { return Enum.GetName(typeof(FormOfStudyEnum), formofstudyenum); }
@@ -113,6 +124,7 @@ namespace ClientDB.Model
         #endregion
 
         string DateOfEntry;
+        [JsonProperty]
         public string dateOfEntry
         {
             get { return DateOfEntry; }
@@ -125,6 +137,7 @@ namespace ClientDB.Model
         }
 
         string Phone;
+        [JsonProperty]
         public string phone
         {
             get { return Phone; }
@@ -136,13 +149,15 @@ namespace ClientDB.Model
         }
 
         string Email;
+        [JsonProperty]
         public string email { get { return Email; } set { Email = value; OnPropertyChanged("email"); } }
 
         string Address;
+        [JsonProperty]
         public string address { get { return Address; } set { Address = value; OnPropertyChanged("address"); } }
 
         #region Status
-
+        [JsonProperty]
         public string status 
         { 
             get { return Enum.GetName(typeof(StudentStatusEnum), StatusEnum); } 
@@ -171,11 +186,9 @@ namespace ClientDB.Model
 
         #endregion
         string DateOfLeaving;
+        [JsonProperty]
         public string dateOfLeaving { get { return DateOfLeaving; } set { DateOfLeaving = value; OnPropertyChanged("dateOfLeaving"); } }
 
-        ObservableCollection<Ticketextension> TicketExtensions;
-        
-        public ObservableCollection<Ticketextension> ticketExtensions { get { return TicketExtensions; } set { TicketExtensions = value; OnPropertyChanged("ticketExtensions"); } }
 
         #endregion
 

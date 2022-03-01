@@ -313,6 +313,7 @@ namespace ClientDB.ViewModel
                     (saveStudent = new RelayCommand(obj =>
                     {
                         api.UpdateStudent(SelectedStudent);
+                        api.AddPayment(selectedStudent);
                     }));
             }
         }
