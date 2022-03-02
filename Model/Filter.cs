@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ClientDB.Model
 {
@@ -21,10 +21,10 @@ namespace ClientDB.Model
         [JsonIgnore]
         public FilterType Type { get { return type; } set { type = value; OnPropertyChanged("Type"); } }
      
-        [JsonProperty("key")]
+        [JsonPropertyName("key")]
         public string TypeValue { get { return Enum.GetName(typeof(FilterType), Type); } }
 
-        [JsonProperty("operation")]
+        [JsonPropertyName("operation")]
         public string operation { get { return EnumHelper.GetDescription(this.FilterOperations); } }
 
         FilterOperations filterOperations;
@@ -36,7 +36,7 @@ namespace ClientDB.Model
         }
 
         string value;
-        [JsonProperty ("value")]
+        [JsonPropertyName("value")]
         public string FilterValue { get { return this.value; } set { this.value = value; OnPropertyChanged("FilterValue"); } }
         #endregion
     }

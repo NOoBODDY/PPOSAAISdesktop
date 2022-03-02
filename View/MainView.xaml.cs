@@ -23,7 +23,7 @@ namespace ClientDB.View
     {
         bool fullScreen = false;
         bool theme = true;
-        public MainView(APIservice api)
+        public MainView(REST_APIservice api)
         {
             InitializeComponent();
             DataContext = new MainViewModel(api);

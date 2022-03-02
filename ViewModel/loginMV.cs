@@ -5,9 +5,8 @@ using ClientDB.Model;
 using System.Windows;
 using Unity;
 using ClientDB.View;
-using System.Net;
-using System.IO;
-using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 //TODO 
 //(1)добавить проверку на админа, когда будет функционал
@@ -43,9 +42,12 @@ namespace ClientDB.ViewModel
 
         private IUnityContainer container;
 
+        SynchronizationContext Context;
+
         public loginMV( IUnityContainer unityContainer)
         {
             container = unityContainer;
+            Context = SynchronizationContext.Current;
         }
 
         public string Password
@@ -57,7 +59,7 @@ namespace ClientDB.ViewModel
             }
         }
 
-        APIservice api;
+        REST_APIservice api;
 
         #region commands
         private RelayCommand loginCommand;
@@ -68,20 +70,10 @@ namespace ClientDB.ViewModel
                 return loginCommand ??
                     (loginCommand = new RelayCommand(obj =>
                     {
-                        api = new APIservice(UserName, Password);
-
-                        if (api.LogIn() == "OK") // 
-                        {
-
-                            MainView main = new MainView(api);
-                            main.Show();
-                            CloseAction();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Иди нахуй");
-                        }
-
+                        api = new REST_APIservice(UserName, Password);
+                        api.BadRequest += badRequest;
+                        Task task = api.LogInAsync();
+                        Task task1 = task.ContinueWith(t=> Context.Post(getConnection, null));
                     }));
             }
         }
@@ -95,6 +87,20 @@ namespace ClientDB.ViewModel
                 return closeCommand ??
                                     (closeCommand = new RelayCommand(obj => { CloseAction();}));
             }
+        }
+        #endregion
+
+        #region Tasks
+        void getConnection(object state)
+        {
+            MainView main = new MainView(api);
+            main.Show();
+            CloseAction();
+        }
+
+        void badRequest(object sender, string message)
+        {
+            MessageBox.Show(message);
         }
         #endregion
     }

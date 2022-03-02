@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ClientDB.Model
 {
@@ -21,15 +21,18 @@ namespace ClientDB.Model
         #region Properties
 
         ObservableCollection<Ticketextension> TicketExtensions;
-
+        [JsonPropertyName("ticketExtensions")]
         public ObservableCollection<Ticketextension> ticketExtensions { get { return TicketExtensions; } set { TicketExtensions = value; OnPropertyChanged("ticketExtensions"); } }
 
-        [JsonProperty]
-        public int? id;
+        [JsonPropertyName("id")]
+        public int? id 
+        { get; 
+            set; 
+        }
 
         #region name
         string Firstname;
-        [JsonProperty]
+        [JsonPropertyName("firstname")]
         public string firstname
         {
             get { return Firstname; }
@@ -41,7 +44,7 @@ namespace ClientDB.Model
         }
 
         string Middlename;
-        [JsonProperty]
+        [JsonPropertyName("middlename")]
         public string middlename
         {
             get { return Middlename; }
@@ -53,7 +56,7 @@ namespace ClientDB.Model
         }
 
         string Lastname;
-        [JsonProperty]
+        [JsonPropertyName("lastname")]
         public string lastname
         {
             get { return Lastname; }
@@ -66,7 +69,7 @@ namespace ClientDB.Model
         #endregion
 
         string Group;
-        [JsonProperty]
+        [JsonPropertyName("group")]
         public string group
         {
             get { return Group; }
@@ -89,9 +92,9 @@ namespace ClientDB.Model
             }
         }
 
-        string ProfileTicketNumber;
-        [JsonProperty]
-        public string profileTicketNumber
+        int ProfileTicketNumber;
+        [JsonPropertyName("profileTicketNumber")]
+        public int profileTicketNumber
         {
             get { return ProfileTicketNumber; }
             set
@@ -108,7 +111,7 @@ namespace ClientDB.Model
             get { return formofstudyenum; }
             set { formofstudyenum = value; OnPropertyChanged("Formofstudyenum"); }
         }
-        [JsonProperty]
+        [JsonPropertyName("formOfStudy")]
         public string formOfStudy
         {
             get { return Enum.GetName(typeof(FormOfStudyEnum), formofstudyenum); }
@@ -124,7 +127,7 @@ namespace ClientDB.Model
         #endregion
 
         string DateOfEntry;
-        [JsonProperty]
+        [JsonPropertyName("dateOfEntry")]
         public string dateOfEntry
         {
             get { return DateOfEntry; }
@@ -137,7 +140,7 @@ namespace ClientDB.Model
         }
 
         string Phone;
-        [JsonProperty]
+        [JsonPropertyName("phone")]
         public string phone
         {
             get { return Phone; }
@@ -149,29 +152,37 @@ namespace ClientDB.Model
         }
 
         string Email;
-        [JsonProperty]
-        public string email { get { return Email; } set { Email = value; OnPropertyChanged("email"); } }
+        [JsonPropertyName("email")]
+        public string email 
+        { 
+            get { return Email; } 
+            set { Email = value; OnPropertyChanged("email"); } 
+        }
 
         string Address;
-        [JsonProperty]
-        public string address { get { return Address; } set { Address = value; OnPropertyChanged("address"); } }
+        [JsonPropertyName("address")]
+        public string address 
+        { 
+            get { return Address; } 
+            set { Address = value; OnPropertyChanged("address"); } 
+        }
 
         #region Status
-        [JsonProperty]
-        public string status 
-        { 
-            get { return Enum.GetName(typeof(StudentStatusEnum), StatusEnum); } 
-            set 
+        [JsonPropertyName("status")]
+        public string status
+        {
+            get { return Enum.GetName(typeof(StudentStatusEnum), StatusEnum); }
+            set
             {
                 if (value != null)
                 {
                     StatusEnum = (StudentStatusEnum)EnumHelper.GetEnum(value, typeof(StudentStatusEnum));
                     OnPropertyChanged("status");
                 }
-            } 
+            }
         }
 
-        
+
         StudentStatusEnum statusEnum;
         [JsonIgnore]
         public StudentStatusEnum StatusEnum
@@ -186,8 +197,12 @@ namespace ClientDB.Model
 
         #endregion
         string DateOfLeaving;
-        [JsonProperty]
-        public string dateOfLeaving { get { return DateOfLeaving; } set { DateOfLeaving = value; OnPropertyChanged("dateOfLeaving"); } }
+        [JsonPropertyName("dateOfLeaving")]
+        public string dateOfLeaving 
+        { 
+            get { return DateOfLeaving; } 
+            set { DateOfLeaving = value; OnPropertyChanged("dateOfLeaving"); } 
+        }
 
 
         #endregion
@@ -204,7 +219,9 @@ namespace ClientDB.Model
         public object[] rolesInPPOSA { get; set; }
         [JsonIgnore]
         public object[] documents { get; set; }
-        
+
+
+
     }
 
     public class Ticketextension
@@ -255,5 +272,28 @@ namespace ClientDB.Model
         }
     }
 
+
+
+    public class Class1
+    {
+        public int id { get; set; }
+        public string firstname { get; set; }
+        public string middlename { get; set; }
+        public string lastname { get; set; }
+        public object email { get; set; }
+        public string group { get; set; }
+        public string phone { get; set; }
+        public string formOfStudy { get; set; }
+        public int profileTicketNumber { get; set; }
+        public object address { get; set; }
+        public string status { get; set; }
+        public string dateOfEntry { get; set; }
+        public object dateOfLeaving { get; set; }
+        public object[] materialAidList { get; set; }
+        public object[] ticketExtensions { get; set; }
+        public object[] rolesInGroup { get; set; }
+        public object[] rolesInPPOSA { get; set; }
+        public object[] documents { get; set; }
+    }
 
 }

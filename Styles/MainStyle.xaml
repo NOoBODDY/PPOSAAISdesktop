@@ -94,14 +94,14 @@
                                     <Ellipse
                                             Height="40" Width="40"
                                             VerticalAlignment="Center"
-                                            ToolTip="{Binding Authorised.fullname}">
+                                            ToolTip="{Binding Authorised.fullName}">
                                         <Ellipse.Fill>
                                             <ImageBrush ImageSource="{Binding Authorised.Avatar}" />
                                         </Ellipse.Fill>
                                         
                                     </Ellipse>
                                     <StackPanel Orientation="Vertical" Margin="15 0 0 0">
-                                        <TextBlock Text="{Binding Authorised.fullname, Converter={StaticResource FullNameConverter}, Mode=OneWay}" 
+                                        <TextBlock Text="{Binding Authorised.fullName, Converter={StaticResource FullNameConverter}, Mode=OneWay}" 
                                                    Foreground="{DynamicResource PrimaryTextColor}" 
                                                    HorizontalAlignment="Left" 
                                                    FontSize="12"

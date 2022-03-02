@@ -49,7 +49,7 @@ namespace ClientDB.ViewModel
             set { students = value; OnPropertyChanged("Students"); }
         }
 
-        APIservice api;
+        REST_APIservice api;
 
         
         #region Filter Menu
@@ -148,24 +148,25 @@ namespace ClientDB.ViewModel
         #endregion
 
         #region Constructor
-        public MainViewModel(APIservice API)
+        public MainViewModel(REST_APIservice API)
         {
             api = API;
-            api.ExeptionNotify += ThrowMessage;
-            Authorised = api.GetAccount();
+            api.BadRequest += ThrowMessage;
+            Task getAccount = api.GetAccountAsync();
+            Task WriteAccont = getAccount.ContinueWith(setAccount);
             //StudentProvider provider = new StudentProvider(api);
             //Students = new AsyncVirtualizingCollection<Student>(provider, 100, 30000);
 
             Func<int, int, CancellationToken, Student[]> pageFetcher = (offset, pageSize, _) =>
-            api.GetPageOfStudents(offset, offset + pageSize);
+             api.GetPageOfStudentsAsync(offset, offset + pageSize).Result;
 
             Func<CancellationToken, int> countFetcher = _ =>
-                api.GetStudentsCount();
+                api.GetStudentsCountAsync().Result;
 
             Func<int, int, CancellationToken, Task<Student[]>> TaskpageFetcher = (offset, pageSize, _) =>
-                Task.Run<Student[]>(()=>api.GetPageOfStudents(offset, offset + pageSize));
+                api.GetPageOfStudentsAsync(offset, offset + pageSize);
             Func<CancellationToken, Task<int>> TaskcountFetcher = _ =>
-                Task.Run<int>(()=> api.GetStudentsCount());
+                api.GetStudentsCountAsync();
             Func<int, int, Student> placeholderFactory = (page, items) =>
                 new Student();
 
@@ -186,11 +187,24 @@ namespace ClientDB.ViewModel
 
         #region Notify Message
 
-        void ThrowMessage(string message)
+        void ThrowMessage(object sender, string message)
         {
             MessageBox.Show(message);
         }
 
+        #endregion
+
+        #region Tasks
+
+        void setAccount(Task t)
+        {
+            Authorised = (t as Task<Account>).Result;
+        }
+
+        void listReset(Task t)
+        {
+            Students.Reset();
+        }
         #endregion
 
 
@@ -265,10 +279,10 @@ namespace ClientDB.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand(obj =>
                   {
-                        NewStudent.id = null;
-                        api.AddStudent(NewStudent);
-                        NewStudent = new Student();
-                        Students.Reset();
+                      NewStudent.id = null;
+                      Task addStudent = api.AddStudentAsync(NewStudent);
+                      Task reset = addStudent.ContinueWith(listReset);
+                      NewStudent = new Student();
                   }));
             }
         }
@@ -312,8 +326,9 @@ namespace ClientDB.ViewModel
                 return saveStudent ??
                     (saveStudent = new RelayCommand(obj =>
                     {
-                        api.UpdateStudent(SelectedStudent);
-                        api.AddPayment(selectedStudent);
+                        Task update = api.UpdateStudentAsync(SelectedStudent);
+                        Task addP = update.ContinueWith(t => api.AddPaymentAsync(selectedStudent));
+                        
                     }));
             }
         }

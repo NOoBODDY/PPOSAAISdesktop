@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using System.Drawing.Imaging;
 using System.Windows.Controls;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -21,12 +21,6 @@ namespace ClientDB.Model
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         #endregion
-
-        Account()
-        {
-        }
-
-
         string Username;
         string base64Avatar;
         public string avatar { get { return base64Avatar; } set { base64Avatar = value; OnPropertyChanged("avatar"); OnPropertyChanged("Avatar"); } }
@@ -36,7 +30,7 @@ namespace ClientDB.Model
 
         public Role Role { get { return roles !=null && roles.Count != 0 ? roles[0]: new Role { title= ""}; } set { roles[0] = value; OnPropertyChanged("Role"); } }
 
-        public string fullname
+        public string fullName
         {
             get { return FullName; }
             set
